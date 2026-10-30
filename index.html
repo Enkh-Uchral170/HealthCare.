@@ -1,0 +1,1686 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Эрүүл Мэндийн Эрсдэл</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+body{margin:0}[hidden]{display:none!important}img{max-width:100%}
+/* Layout: sticky-free single column shell. View 1 = intro (hero + illustrated guide + warning). View 2 = calculator (form left, result right). Zones on every scale use one green / amber / red system, separate from the aqua accent. */
+:root{
+  --bg:#f1f8f8; --surface:#ffffff; --surface-2:#e8f4f4; --line:#d3e6e6;
+  --fg:#0d2b30; --muted:#587479; --accent:#0e9aa7; --accent-soft:#d9f0f2; --accent-fg:#ffffff;
+  --low:#12936b; --low-bg:#dcf4ea; --mid:#9a6200; --mid-bg:#fbefcf; --high:#c4352f; --high-bg:#fbe3e1;
+  --zg:#bfe9d9; --zw:#f6dfa0; --zr:#f3b8b3; --zn:#d3e6e6;
+  --shadow:0 1px 2px rgba(13,43,48,.05),0 8px 24px rgba(14,100,110,.07);
+  --font:'Manrope',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#08191c; --surface:#0f2529; --surface-2:#143036; --line:#1f3f45;
+  --fg:#e3f3f4; --muted:#8fb0b4; --accent:#3cc4d1; --accent-soft:#123a40; --accent-fg:#04191c;
+  --low:#4fd5a5; --low-bg:#10372c; --mid:#f0b94a; --mid-bg:#3a2d0f; --high:#ff7f78; --high-bg:#411b1a;
+  --zg:#1b5a48; --zw:#6b5214; --zr:#6e2d2a; --zn:#1f3f45;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#08191c; --surface:#0f2529; --surface-2:#143036; --line:#1f3f45;
+  --fg:#e3f3f4; --muted:#8fb0b4; --accent:#3cc4d1; --accent-soft:#123a40; --accent-fg:#04191c;
+  --low:#4fd5a5; --low-bg:#10372c; --mid:#f0b94a; --mid-bg:#3a2d0f; --high:#ff7f78; --high-bg:#411b1a;
+  --zg:#1b5a48; --zw:#6b5214; --zr:#6e2d2a; --zn:#1f3f45;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.55;
+  padding-block:20px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1080px;margin:0 auto}
+a{color:var(--accent)}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--fg);font-weight:800;letter-spacing:-.01em;font-size:17px}
+.logo{width:40px;height:40px;border-radius:13px;background:var(--accent);display:grid;place-items:center;flex:none}
+.logo svg{width:22px;height:22px}
+.toggle{margin-left:auto;font:inherit;font-size:13px;font-weight:600;background:var(--surface);color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:7px 12px;cursor:pointer}
+.toggle:focus-visible,.btn:focus-visible,.help:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{text-wrap:balance;letter-spacing:-.02em;margin:0}
+.btn{font:inherit;font-weight:700;border-radius:12px;padding:13px 22px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg);text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn:disabled{opacity:.55;cursor:wait}
+.sec{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 4px}
+
+/* ---------- intro ---------- */
+.hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:32px;align-items:center;margin-bottom:44px}
+.hero h1{font-size:clamp(30px,5vw,46px);font-weight:800;line-height:1.08}
+.hero p.lead{font-size:17px;color:var(--muted);margin:16px 0 24px;max-width:46ch}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.hero small{color:var(--muted);font-size:13px}
+.art{position:relative;max-width:420px;margin-inline:auto;width:100%}
+.art svg{display:block;width:100%;height:auto}
+.chip-f{position:absolute;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px 12px;box-shadow:var(--shadow);font-size:12.5px;font-weight:700;display:flex;gap:8px;align-items:center;white-space:nowrap}
+.chip-f i{width:9px;height:9px;border-radius:50%;background:var(--low)}
+.chip-f small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+.c1{left:-2%;top:12%} .c2{right:-2%;top:44%} .c3{left:6%;bottom:6%}
+.c2 i{background:var(--mid)}
+.block{margin-bottom:44px}
+.block>h2{font-size:clamp(22px,3vw,28px);font-weight:800;margin-bottom:6px}
+.block>p{color:var(--muted);margin:0 0 20px;max-width:62ch}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;counter-reset:s}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;display:grid;gap:6px}
+.step b{font-size:12px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase}
+.step h3{font-size:16px;font-weight:800}
+.step p{margin:0;color:var(--muted);font-size:14px}
+.guides{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.guide{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;display:grid;gap:10px;align-content:start}
+.ic{width:52px;height:52px;border-radius:15px;background:var(--accent-soft);display:grid;place-items:center;color:var(--accent)}
+.ic svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.guide h3{font-size:15.5px;font-weight:800}
+.guide p{margin:0;font-size:13.5px;color:var(--muted)}
+.guide .n{font-size:12.5px;font-weight:700;color:var(--fg);background:var(--surface-2);border-radius:8px;padding:4px 8px;justify-self:start}
+.alert{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;background:var(--high-bg);color:var(--fg);border:1px solid var(--zr);border-radius:20px;padding:20px}
+.alert .ai{width:44px;height:44px;border-radius:13px;background:var(--high);display:grid;place-items:center}
+.alert .ai svg{width:24px;height:24px;stroke:var(--surface);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.alert h3{font-size:16px;font-weight:800;margin-bottom:6px;color:var(--high)}
+.alert ul{margin:0;padding-left:18px;display:grid;gap:4px;font-size:14px}
+.factors{display:flex;flex-wrap:wrap;gap:8px}
+.factors span{background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:600}
+.endcta{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;background:var(--accent);color:var(--accent-fg);border-radius:22px;padding:24px 28px}
+.endcta h2{font-size:clamp(20px,3vw,26px);font-weight:800}
+.endcta .btn{background:var(--surface);color:var(--fg);border-color:var(--surface)}
+@media(max-width:900px){.guides{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.hero{grid-template-columns:minmax(0,1fr)}.steps{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:480px){.guides{grid-template-columns:minmax(0,1fr)}.alert{grid-template-columns:minmax(0,1fr)}}
+
+/* ---------- calculator ---------- */
+.back{display:inline-flex;gap:6px;align-items:center;font-weight:600;font-size:14px;text-decoration:none;margin-bottom:14px;color:var(--muted)}
+.ph{margin-bottom:22px}
+.ph h1{font-size:clamp(22px,3.4vw,30px);font-weight:800}
+.ph p{margin:4px 0 0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px;align-items:start}
+@media(max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);padding:22px;min-width:0}
+.sec:not(:first-child){margin-top:26px}
+.field{padding:16px 0;border-bottom:1px solid var(--line)}
+.field:last-of-type{border-bottom:0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.lw{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;min-width:0}
+.lw label,.lw .lab{font-weight:700}
+.hint{color:var(--muted);font-size:12.5px;font-weight:500}
+.help{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--accent);background:var(--accent-soft);color:var(--accent);font:inherit;font-weight:800;font-size:12px;line-height:1;cursor:pointer;display:inline-grid;place-items:center;padding:0;align-self:center}
+.help[aria-expanded=true]{background:var(--accent);color:var(--accent-fg)}
+.helpbox{margin:10px 0 0;background:var(--accent-soft);border-radius:12px;padding:12px 14px;font-size:13.5px;display:grid;gap:6px}
+.helpbox b{font-weight:800}
+.num{display:flex;align-items:baseline;gap:4px}
+.num input{width:78px;font:inherit;font-weight:700;font-size:16px;text-align:right;color:var(--fg);background:var(--surface-2);border:1px solid transparent;border-radius:10px;padding:4px 8px;font-variant-numeric:tabular-nums}
+.num input:focus{outline:2px solid var(--accent)}
+.num .u{color:var(--muted);font-size:12.5px;min-width:30px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:26px;margin:8px 0 0;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:9px;border-radius:99px;background:var(--track,var(--zn))}
+input[type=range]::-moz-range-track{height:9px;border-radius:99px;background:var(--track,var(--zn))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--surface);border:4px solid var(--accent);margin-top:-6.5px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--surface);border:4px solid var(--accent)}
+input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px}
+.scale{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
+.scale .mid{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}
+.pill{display:inline-block;border-radius:99px;padding:2px 9px;font-size:11.5px;font-weight:800;font-style:normal;white-space:nowrap}
+.pill.g{background:var(--low-bg);color:var(--low)} .pill.w{background:var(--mid-bg);color:var(--mid)} .pill.r{background:var(--high-bg);color:var(--high)} .pill.n{background:var(--surface-2);color:var(--muted)}
+.nrm{font-weight:600}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:12px;padding:3px;gap:2px}
+.seg button{font:inherit;font-weight:600;font-size:14px;color:var(--muted);background:none;border:0;border-radius:9px;padding:7px 16px;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(13,43,48,.18)}
+.bmicalc{margin-top:12px;background:var(--surface-2);border-radius:14px;padding:12px 14px;display:grid;gap:8px}
+.bmicalc .t{font-weight:700;font-size:13.5px}
+.bmicalc .in{display:flex;gap:12px;flex-wrap:wrap}
+.bmicalc label{display:grid;gap:3px;font-size:12.5px;color:var(--muted);font-weight:600}
+.bmicalc input{width:104px;font:inherit;font-weight:700;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 10px}
+.bmicalc input:focus{outline:2px solid var(--accent)}
+.bmicalc .o{font-size:13px;color:var(--muted)}
+.actions{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.actions .primary{flex:1;min-width:170px}
+.result{display:grid;gap:16px;min-width:0}
+.empty{display:grid;gap:10px;justify-items:start;color:var(--muted)}
+.empty svg{width:64px;height:64px}
+.empty h3{color:var(--fg);font-size:17px;font-weight:800}
+.empty p{margin:0}
+.stale{background:var(--mid-bg);color:var(--mid);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:700}
+.risk{border-radius:20px;padding:22px;transition:background .3s,color .3s}
+.risk[data-level=Low]{background:var(--low-bg);color:var(--low)}
+.risk[data-level=Moderate]{background:var(--mid-bg);color:var(--mid)}
+.risk[data-level=High]{background:var(--high-bg);color:var(--high)}
+.risk .k{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.risk .big{font-size:clamp(34px,6vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin:6px 0 2px}
+.risk .mn{font-weight:700;font-size:16px}
+.risk .sum{margin:12px 0 0;color:var(--fg);font-size:14.5px}
+.bars{display:grid;gap:12px}
+.bar .t{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;margin-bottom:5px}
+.bar .t b{font-variant-numeric:tabular-nums}
+.track{height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.fill{height:100%;border-radius:99px;width:0;transition:width .45s cubic-bezier(.2,.7,.2,1)}
+.h3{font-size:15px;font-weight:800;margin:0 0 4px}
+.sub{font-size:12.5px;color:var(--muted);margin:0 0 14px}
+.cmps{display:grid;gap:18px}
+.ct{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:13.5px}
+.ct .cn{font-weight:700}
+.ct .cv{font-variant-numeric:tabular-nums;display:flex;gap:8px;align-items:center}
+.ctrack{position:relative;height:9px;border-radius:99px;background:var(--track,var(--zn));margin:12px 9px 6px}
+.ctrack i{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--surface);border:4px solid var(--fg);transform:translate(-50%,-50%);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.cs{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:14px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:12px;height:12px;border-radius:4px}
+.tips{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.tips li{display:grid;grid-template-columns:10px minmax(0,1fr);gap:12px;font-size:14px}
+.tips i{width:10px;height:10px;border-radius:50%;margin-top:6px;background:var(--low)}
+.tips i.w{background:var(--mid)} .tips i.d{background:var(--high)}
+.dl{display:grid;gap:10px}
+.dl p{margin:0;font-size:13.5px;color:var(--muted)}
+.dl .msg{font-size:13px;font-weight:700;color:var(--low);min-height:1.2em}
+.note{font-size:12px;color:var(--muted);line-height:1.5;margin:0}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ================= v2.0 additions ================= */
+.top{gap:10px}
+.lang{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:3px;gap:2px;margin-left:auto}
+.lang button{font:inherit;font-weight:700;font-size:13px;color:var(--muted);background:none;border:0;border-radius:9px;padding:6px 11px;cursor:pointer;white-space:nowrap;display:inline-flex;gap:6px;align-items:center;transition:background .2s,color .2s}
+.lang button:hover{color:var(--fg)}
+.lang button[aria-pressed=true]{background:var(--surface);color:var(--fg);box-shadow:0 1px 3px rgba(13,43,48,.18)}
+.lang button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.lang .short{display:none}
+.toggle{margin-left:0;display:inline-flex;gap:7px;align-items:center;transition:border-color .2s,color .2s}
+.toggle:hover{border-color:var(--accent);color:var(--fg)}
+.toggle svg{width:16px;height:16px;flex:none}
+@media(max-width:520px){.lang .full{display:none}.lang .short{display:inline}.toggle .tt{display:none}.toggle{padding:8px 10px}}
+@media(max-width:380px){.brand .bt{display:none}}
+
+/* motion */
+.view{animation:rise .38s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#out>*{animation:rise .42s ease both}
+#out>*:nth-child(2){animation-delay:.05s}#out>*:nth-child(3){animation-delay:.1s}#out>*:nth-child(4){animation-delay:.15s}#out>*:nth-child(5){animation-delay:.2s}#out>*:nth-child(6){animation-delay:.25s}
+.btn{transition:transform .15s,box-shadow .2s,background .2s,border-color .2s,filter .2s}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 16px rgba(14,100,110,.16);border-color:var(--accent)}
+.btn.primary:hover:not(:disabled){filter:brightness(1.07)}
+.btn:active:not(:disabled){transform:none;box-shadow:none}
+.step,.guide,.panel{transition:transform .2s,box-shadow .2s,border-color .2s}
+.step:hover,.guide:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--accent)}
+.help{transition:background .15s,color .15s,transform .15s}
+.help:hover{background:var(--accent);color:var(--accent-fg);transform:scale(1.08)}
+.seg button{transition:background .15s,color .15s}
+.seg button:hover:not([aria-pressed=true]){color:var(--fg)}
+
+/* beating heart + ECG (transform/opacity only) */
+.heart{transform-box:fill-box;transform-origin:50% 60%;animation:beat 1.5s ease-in-out infinite}
+.hglow{transform-box:fill-box;transform-origin:center;animation:glow 1.5s ease-in-out infinite}
+.ecg{stroke-dasharray:100;animation:ecg 3s linear infinite}
+.logo{animation:logobeat 1.5s ease-in-out infinite}
+@keyframes beat{0%{transform:scale(1)}10%{transform:scale(1.06)}20%{transform:scale(1)}32%{transform:scale(1.09)}48%,100%{transform:scale(1)}}
+@keyframes glow{0%{opacity:.35;transform:scale(.96)}10%{opacity:.7;transform:scale(1.02)}20%{opacity:.4;transform:scale(.97)}32%{opacity:.9;transform:scale(1.06)}48%,100%{opacity:.35;transform:scale(.96)}}
+@keyframes ecg{0%{stroke-dashoffset:100}50%,85%{stroke-dashoffset:0}100%{stroke-dashoffset:-100}}
+@keyframes logobeat{0%{transform:scale(1)}10%{transform:scale(1.05)}20%{transform:scale(1)}32%{transform:scale(1.07)}48%,100%{transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.heart,.hglow,.logo,.view,#out>*{animation:none!important}.ecg{animation:none!important;stroke-dasharray:none}.hglow{opacity:.5}}
+
+/* privacy + footer */
+.privacy{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px 20px}
+.privacy .si{width:46px;height:46px;border-radius:14px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.privacy .si svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.privacy h3{font-size:16px;font-weight:800;margin-bottom:2px}
+.privacy p{margin:0;color:var(--muted);font-size:13.5px}
+.pchip{display:inline-flex;gap:8px;align-items:center;font-size:12.5px;font-weight:600;color:var(--muted);margin:0 0 16px}
+.pchip svg{width:16px;height:16px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.sitefoot{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);line-height:1.55;max-width:80ch}
+
+/* results dashboard */
+.risk{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 18px;align-items:center}
+.risk .rt{min-width:0}
+.ring{width:132px;height:132px;display:block}
+.ring .rp{font-size:26px;font-weight:800;fill:currentColor;font-family:var(--font)}
+.ring .rl{font-size:11px;font-weight:700;fill:currentColor;letter-spacing:.06em;text-transform:uppercase;font-family:var(--font)}
+@media(max-width:440px){.risk{grid-template-columns:minmax(0,1fr);justify-items:start}}
+.expl{margin:0 0 16px;font-size:14px}
+.expl .e2{display:block;color:var(--muted);margin-top:6px;font-size:13px}
+.frows{display:grid;gap:13px}
+.fr .t{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;font-size:13.5px}
+.fr .nm{font-weight:700}
+.fr .vl{display:flex;gap:8px;align-items:center;font-variant-numeric:tabular-nums}
+.wb{display:flex;align-items:center;gap:10px;margin-top:5px}
+.wb .tr{flex:1;height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.wb .tr i{display:block;height:100%;border-radius:99px;background:var(--accent)}
+.wb small{font-size:11.5px;color:var(--muted);min-width:40px;text-align:right;font-variant-numeric:tabular-nums}
+.warn{color:var(--high);font-size:12.5px;font-weight:600;margin-top:8px}
+.warn:empty{display:none}
+input[aria-invalid=true]{outline:2px solid var(--high)}
+.acts{display:flex;gap:10px;flex-wrap:wrap}
+.acts .btn{flex:1;min-width:140px}
+.acts .msg{flex-basis:100%}
+
+/* ================= v3.0 additions: My Health dashboard (additive only) ================= */
+.dashlink{display:inline-flex;gap:8px;align-items:center;font:inherit;font-size:13px;font-weight:700;color:var(--accent);background:var(--accent-soft);border:1px solid transparent;border-radius:10px;padding:7px 12px;text-decoration:none;white-space:nowrap;transition:border-color .2s,transform .15s}
+.dashlink:hover{border-color:var(--accent)}
+.dashlink:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dashlink svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+@media(max-width:620px){.dashlink .dtx{display:none}.dashlink{padding:8px 10px}}
+@media(max-width:480px){.top{gap:6px}.lang button{padding:6px 8px}.dashlink{padding:8px}}
+.btn.sm{padding:7px 12px;font-size:13px;border-radius:10px}
+.btn.danger{background:var(--high);color:#fff;border-color:var(--high)}
+.btn.danger-o{color:var(--high);border-color:var(--zr)}
+#dash .btn:disabled{cursor:not-allowed}
+.h3.lg{font-size:17px}
+
+/* tabs */
+.dtabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 22px}
+.dtab{font:inherit;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px 14px;cursor:pointer;display:grid;grid-template-columns:auto minmax(0,1fr);gap:10px;align-items:center;color:var(--fg);transition:border-color .2s,background .2s,box-shadow .2s,transform .15s}
+.dtab:hover{border-color:var(--accent);transform:translateY(-1px)}
+.dtab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dtab[aria-selected=true]{border-color:var(--accent);background:var(--accent-soft);box-shadow:var(--shadow)}
+.dtab .ic{width:42px;height:42px;border-radius:12px;background:var(--surface-2)}
+.dtab[aria-selected=true] .ic{background:var(--accent);color:var(--accent-fg)}
+.dtab .ic svg{width:23px;height:23px}
+.dtab b{display:block;font-size:14.5px;font-weight:800;line-height:1.25}
+.dtab small{display:block;color:var(--muted);font-size:12px;font-weight:600;margin-top:1px}
+@media(max-width:860px){.dtabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:400px){.dtab{grid-template-columns:minmax(0,1fr);justify-items:start;gap:6px}.dtab small{display:none}}
+.dpane{animation:rise .35s ease both;min-width:0}
+.dpane.narrow{max-width:760px;margin-inline:auto}
+
+/* wizard */
+.prog{margin-bottom:16px;display:grid;gap:12px}
+.psteps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.ps{font:inherit;font-size:12.5px;font-weight:700;color:var(--muted);background:none;border:0;padding:2px 0;display:flex;gap:7px;align-items:center;cursor:pointer;min-width:0;text-align:left}
+.ps:disabled{cursor:default}
+.ps i{font-style:normal;flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:var(--surface-2);color:var(--muted);transition:background .25s,color .25s}
+.ps span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ps.cur{color:var(--fg)}.ps.cur i{background:var(--accent);color:var(--accent-fg)}
+.ps.done i{background:var(--low-bg);color:var(--low)}
+.ps:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:8px}
+@media(max-width:520px){.ps span{display:none}.ps.cur span{display:block}.psteps{grid-template-columns:auto auto auto minmax(0,1fr)}.ps.cur{grid-column:auto}}
+.pbar{height:8px;border-radius:99px;background:var(--surface-2);overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .45s cubic-bezier(.2,.7,.2,1)}
+.pl{margin:0;font-size:12.5px;color:var(--muted);font-weight:600}
+.wnav{display:flex;gap:10px;justify-content:space-between;margin-top:22px}
+.wnav .btn{min-width:130px}.wnav .primary{flex:1;max-width:320px;margin-left:auto}
+.rg{margin-bottom:18px}.rg:last-of-type{margin-bottom:0}
+.rgh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:2px}
+.rgh .sec{margin:0!important}
+.rr{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;align-items:center}
+.rr span{color:var(--muted);min-width:0}.rr b{font-variant-numeric:tabular-nums;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;text-align:right}
+.rgp{margin:0 0 14px;color:var(--muted);font-size:13.5px}
+.apanel{margin-top:16px}
+
+/* modals */
+html.mlock{overflow:hidden}
+.mdl{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:rgba(8,25,28,.58);animation:fade .2s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.mbox{background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:22px;max-width:780px;width:100%;max-height:calc(100dvh - 32px);overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.35);padding:20px;animation:rise .3s ease both}
+.mbox.sm{max-width:440px;display:grid;gap:12px}
+.mbox.sm p{margin:0;color:var(--muted)}
+.mhd{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.mhd h2{font-size:20px;font-weight:800}
+
+/* charts */
+.chart-hd{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:18px}
+.chart-hd .sub{margin:0;flex:1 1 220px}
+.chart-top{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.csel{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--muted);font-weight:600;min-width:0}
+.csel select{font:inherit;font-weight:600;color:var(--fg);background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:6px 10px;max-width:100%;min-width:0}
+.cbody{animation:rise .4s ease both}
+.donutw{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:26px;align-items:center}
+@media(max-width:640px){.donutw{grid-template-columns:minmax(0,1fr);justify-items:center}}
+.dsvgw{position:relative;width:100%;max-width:260px}
+.dsvgw svg{display:block;width:100%;height:auto;transform:rotate(-90deg)}
+.dseg{transition:stroke-dasharray 1.1s cubic-bezier(.2,.7,.2,1),opacity .2s,stroke-width .2s;cursor:pointer;outline:none}
+.dseg:focus-visible,.dseg.on{stroke-width:30}
+.donutw.hov .dseg:not(.on){opacity:.3}
+.dcen{position:absolute;inset:0;display:grid;place-content:center;text-align:center;pointer-events:none;padding:0 20%}
+.dcv{font-size:clamp(26px,5vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.1;font-variant-numeric:tabular-nums}
+.dcn{font-size:12px;font-weight:700;color:var(--muted);margin-top:2px}
+.dleg{display:grid;gap:10px;width:100%}
+.dleg-i{font:inherit;display:grid;grid-template-columns:14px minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;transition:border-color .2s,background .2s}
+.dleg-i:hover,.dleg-i.on{border-color:var(--accent);background:var(--accent-soft)}
+.dleg-i:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dleg-i i{width:14px;height:14px;border-radius:5px}
+.dleg-i b{font-variant-numeric:tabular-nums}
+.dleg-i span{font-weight:600;font-size:14px}
+.cmsg{margin:16px 0 0;font-size:14px;color:var(--fg)}
+.zsum{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:6px}
+.zc{border-radius:14px;padding:10px 12px;text-align:center;font-size:12.5px;font-weight:700}
+.zc b{display:block;font-size:26px;font-weight:800;line-height:1.15}
+.zc.g{background:var(--low-bg);color:var(--low)}.zc.w{background:var(--mid-bg);color:var(--mid)}.zc.r{background:var(--high-bg);color:var(--high)}
+.znote{font-size:12px;color:var(--muted);margin:0 0 16px}
+.ctr{padding:8px 10px;border-radius:12px;cursor:pointer;transition:background .2s;margin:0 -10px}
+.ctr:hover,.ctr.on{background:var(--surface-2)}
+.ctr:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.ctr .ctrack i{left:0;transition:left 1.1s cubic-bezier(.2,.7,.2,1)}
+.cinfo{margin-top:14px;background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:13.5px;min-height:2.8em}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.chips .pill{font-size:12.5px;padding:5px 12px}
+.fr.ctr{margin:0 -10px}
+.fr .wb .tr i{transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.risk .rt .k{opacity:.9}
+.wres .risk{margin-top:0}
+
+/* history */
+.hhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
+.hhead .sub{margin:2px 0 0}
+.hlist{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.hi{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 14px;align-items:center;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:var(--surface);box-shadow:var(--shadow);animation:rise .35s ease both}
+.hi .hm{display:grid;gap:4px;min-width:0}
+.hi .hd{font-weight:800;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.hi small{color:var(--muted);font-size:12.5px}
+.hi .hb{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.hck input{width:20px;height:20px;accent-color:var(--accent);cursor:pointer}
+@media(max-width:560px){.hi{grid-template-columns:auto minmax(0,1fr)}.hi .hb{grid-column:1/-1;justify-content:flex-start}}
+.hmsg{font-size:13px;font-weight:700;color:var(--low);min-height:1.2em;margin:0 0 10px}
+.cmpgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.cmpcard{border-radius:18px;padding:16px;border:1px solid var(--line);background:var(--surface);display:grid;gap:4px}
+.cmpcard .d{font-size:12.5px;color:var(--muted);font-weight:700}
+.cmpcard .bg{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.cmpcard[data-level=Low] .bg{color:var(--low)}.cmpcard[data-level=Moderate] .bg{color:var(--mid)}.cmpcard[data-level=High] .bg{color:var(--high)}
+.lvsum{margin:14px 0 0;font-weight:700;font-size:14.5px}
+.pcmp{display:grid;gap:16px}
+.pcr .t{display:flex;justify-content:space-between;gap:8px;font-size:13.5px;font-weight:700;margin-bottom:6px;flex-wrap:wrap}
+.pcr .t span:last-child{font-variant-numeric:tabular-nums}
+.pb2{display:grid;gap:4px}
+.pb2 .track{height:8px}.pb2 .track.old .fill{opacity:.4}
+.dpp{font-weight:800;border-radius:99px;padding:1px 9px;font-size:12px}
+.dpp.g{background:var(--low-bg);color:var(--low)}.dpp.r{background:var(--high-bg);color:var(--high)}.dpp.n{background:var(--surface-2);color:var(--muted)}
+.pr{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr);gap:8px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13.5px;align-items:center}
+.pr.hd{font-size:11.5px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.pr .chg{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.pr small{color:var(--muted);font-size:11.5px}
+@media(max-width:560px){.pr{font-size:12.5px;grid-template-columns:minmax(0,1fr) minmax(0,.9fr) minmax(0,.9fr)}.pr .chg{grid-column:1/-1}.pr.hd .chg{display:none}}
+@media(max-width:420px){.cmpgrid{grid-template-columns:minmax(0,1fr)}}
+
+/* privacy */
+.pvrow{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}
+.pvrow>div{min-width:0;flex:1 1 260px}
+.pvrow .sub{margin:2px 0 0}
+.sw{font:inherit;font-weight:700;font-size:13.5px;display:inline-flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);color:var(--muted);border-radius:99px;padding:5px 14px 5px 5px;cursor:pointer;transition:color .2s,border-color .2s}
+.sw:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sw i{width:40px;height:24px;border-radius:99px;background:var(--zn);position:relative;transition:background .2s;display:block}
+.sw i::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--surface);transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.sw[aria-checked=true]{color:var(--low);border-color:var(--low)}
+.sw[aria-checked=true] i{background:var(--low)}
+.sw[aria-checked=true] i::after{transform:translateX(16px)}
+.pvl{margin:0;padding-left:20px;display:grid;gap:9px;font-size:14px}
+.pvwarn{background:var(--mid-bg);color:var(--mid);border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:700;margin-top:12px}
+.xrow{margin-top:16px}
+.xrow .acts{align-items:center}
+.xrow .msg{font-size:13px;font-weight:700;color:var(--low);min-height:1.2em}
+.mt16{margin-top:16px}
+@media(prefers-reduced-motion:reduce){.dpane,.cbody,.mdl,.mbox,.hi{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="#" data-i18n-aria="home">
+      <span class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-fg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path class="ecg" pathLength="100" d="M3 12h4l2.5-6 4 12 2.5-6H21"/></svg></span>
+      <span class="bt" data-i18n="brand"></span>
+    </a>
+    <a class="dashlink" href="#dash" data-i18n-aria="navDash"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg><span class="dtx" data-i18n="navDash"></span></a>
+    <div class="lang" role="group" data-i18n-aria="langLabel">
+      <button type="button" data-lang="mn" aria-pressed="true"><span aria-hidden="true">🇲🇳</span><span class="full">Монгол</span><span class="short">МН</span></button>
+      <button type="button" data-lang="en" aria-pressed="false"><span aria-hidden="true">🇬🇧</span><span class="full">English</span><span class="short">EN</span></button>
+    </div>
+    <button class="toggle" id="themeBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg><span class="tt" id="themeTxt"></span></button>
+  </div>
+
+  <!-- ================= INTRO ================= -->
+  <main id="intro" class="view">
+    <section class="hero">
+      <div>
+        <p class="sec" data-i18n="heroSec"></p>
+        <h1 data-i18n="heroH1"></h1>
+        <p class="lead" data-i18n="heroLead"></p>
+        <div class="cta">
+          <a class="btn primary" href="#calc" data-i18n="calc"></a>
+          <a class="btn" href="#dash" data-i18n="heroDash"></a>
+          <small data-i18n="heroSmall"></small>
+        </div>
+      </div>
+      <div class="art" aria-hidden="true">
+        <svg viewBox="0 0 360 320" fill="none">
+          <defs><radialGradient id="hg"><stop offset="0" stop-color="#ff5c7c" stop-opacity=".6"/><stop offset="1" stop-color="#ff5c7c" stop-opacity="0"/></radialGradient></defs>
+          <circle cx="180" cy="160" r="140" fill="var(--accent-soft)"/>
+          <circle cx="180" cy="160" r="102" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>
+          <circle class="hglow" cx="180" cy="168" r="96" fill="url(#hg)"/>
+          <g class="heart">
+            <path d="M180 238C98 184 82 132 118 104c27-21 52-7 62 14 10-21 35-35 62-14 36 28 20 80-62 134z" fill="var(--accent)"/>
+            <path class="ecg" pathLength="100" d="M96 168h50l16-34 24 62 18-40 14 12h66" stroke="var(--surface)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <path d="M296 70v32M280 86h32" stroke="var(--accent)" stroke-width="7" stroke-linecap="round"/>
+          <circle cx="62" cy="244" r="8" fill="var(--zg)"/><circle cx="318" cy="248" r="5" fill="var(--zw)"/><circle cx="52" cy="92" r="5" fill="var(--zr)"/>
+        </svg>
+        <div class="chip-f c1"><i></i><span><span data-i18n="chipBP"></span><small data-i18n="chipBPv"></small></span></div>
+        <div class="chip-f c2"><i></i><span><span data-i18n="chipGlu"></span><small data-i18n="chipGluv"></small></span></div>
+        <div class="chip-f c3"><i></i><span><span data-i18n="chipRisk"></span><small data-i18n="chipRiskv"></small></span></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2 data-i18n="howH"></h2>
+      <p data-i18n="howP"></p>
+      <div class="steps">
+        <div class="step"><b data-i18n="s1b"></b><h3 data-i18n="s1h"></h3><p data-i18n="s1p"></p></div>
+        <div class="step"><b data-i18n="s2b"></b><h3 data-i18n="s2h"></h3><p data-i18n="s2p"></p></div>
+        <div class="step"><b data-i18n="s3b"></b><h3 data-i18n="s3h"></h3><p data-i18n="s3p"></p></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2 data-i18n="guideH"></h2>
+      <p data-i18n="guideP"></p>
+      <div class="guides">
+        <div class="guide"><div class="ic"><svg viewBox="0 0 48 48"><circle cx="24" cy="26" r="14"/><path d="M24 26l7-8M14 12l-3-3M34 12l3-3M24 8V5"/></svg></div><h3 data-i18n="g1h"></h3><p data-i18n="g1p"></p><span class="n" data-i18n="g1n"></span></div>
+        <div class="guide"><div class="ic"><svg viewBox="0 0 48 48"><path d="M24 6C24 6 10 22 10 31a14 14 0 0 0 28 0C38 22 24 6 24 6z"/><path d="M18 32a6 6 0 0 0 6 6"/></svg></div><h3 data-i18n="g2h"></h3><p data-i18n="g2p"></p><span class="n" data-i18n="g2n"></span></div>
+        <div class="guide"><div class="ic"><svg viewBox="0 0 48 48"><path d="M17 6h14M20 6v14L11 37a4 4 0 0 0 4 6h18a4 4 0 0 0 4-6l-9-17V6"/><path d="M16 32h16"/></svg></div><h3 data-i18n="g3h"></h3><p data-i18n="g3p"></p><span class="n" data-i18n="g3n"></span></div>
+        <div class="guide"><div class="ic"><svg viewBox="0 0 48 48"><rect x="7" y="9" width="34" height="30" rx="8"/><path d="M15 22a12 10 0 0 1 18 0M24 28l5-6"/></svg></div><h3 data-i18n="g4h"></h3><p data-i18n="g4p"></p><span class="n" data-i18n="g4n"></span></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="alert" role="note">
+        <div class="ai" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l10 18H2L12 3z"/><path d="M12 10v5M12 18h.01"/></svg></div>
+        <div>
+          <h3 data-i18n="alertH"></h3>
+          <ul>
+            <li data-i18n="al1"></li>
+            <li data-i18n="al2"></li>
+            <li data-i18n-html="al3"></li>
+            <li data-i18n="al4"></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <div class="privacy" role="note">
+        <div class="si" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8.2-8 9-4.8-.8-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
+        <div><h3 data-i18n="privH"></h3><p data-i18n="privP"></p></div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2 data-i18n="modelH"></h2>
+      <p data-i18n="modelP"></p>
+      <div class="factors"><span data-i18n="F.Age.label"></span><span data-i18n="Gender.label"></span><span data-i18n="F.BMI.label"></span><span data-i18n="F.Systolic_BP.label"></span><span data-i18n="F.Glucose.label"></span><span data-i18n="F.Cholesterol.label"></span><span data-i18n="Smoking.label"></span><span data-i18n="F.Exercise_Days_Per_Week.label"></span><span data-i18n="F.Sleep_Hours.label"></span><span data-i18n="Family_History.short"></span></div>
+    </section>
+
+    <section class="endcta">
+      <h2 data-i18n="endH"></h2>
+      <a class="btn" href="#calc" data-i18n="calc"></a>
+    </section>
+  </main>
+
+  <!-- ================= CALCULATOR ================= -->
+  <main id="calc" class="view" hidden>
+    <a class="back" href="#" data-i18n="back"></a>
+    <div class="ph"><h1 data-i18n="phH"></h1><p data-i18n="phP"></p></div>
+    <p class="pchip"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 8.2-8 9-4.8-.8-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><span data-i18n="privChip"></span></p>
+    <div class="grid">
+      <form class="panel" id="form" autocomplete="off" novalidate>
+        <div id="fields"></div>
+        <div class="actions">
+          <button class="btn primary" id="go" type="submit" disabled></button>
+          <button class="btn" id="reset" type="button" data-i18n="reset"></button>
+        </div>
+      </form>
+
+      <aside class="result" id="result" aria-live="polite">
+        <div class="panel empty" id="emptyState">
+          <svg viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="8" width="44" height="48" rx="10" fill="var(--accent-soft)"/><path d="M20 34h8l4-9 6 16 4-7h6"/></svg>
+          <h3 data-i18n="emptyH"></h3>
+          <p data-i18n="emptyP"></p>
+        </div>
+        <div id="out" hidden>
+          <div class="stale" id="stale" hidden data-i18n="stale"></div>
+          <div class="risk" id="risk" data-level="Low"></div>
+          <div class="xrow"><div class="acts"><button class="btn primary" id="xChart" type="button" data-i18n="btnChart"></button><button class="btn" id="xSave" type="button" data-i18n="btnSave"></button><div class="msg" id="xMsg" role="status"></div></div></div>
+          <div class="panel" style="margin-top:16px" id="pExpl"></div>
+          <div class="panel" style="margin-top:16px" id="pProb"></div>
+          <div class="panel" style="margin-top:16px" id="pCmp"></div>
+          <div class="panel" style="margin-top:16px" id="pTips"></div>
+          <div class="panel dl" style="margin-top:16px">
+            <p class="h3" data-i18n="repH"></p>
+            <p data-i18n="repP"></p>
+            <div class="acts">
+              <button class="btn primary" id="dlBtn" type="button" data-i18n="repBtn"></button>
+              <button class="btn" id="pdfBtn" type="button" data-i18n="pdfBtn"></button>
+              <button class="btn" id="redo" type="button" data-i18n="redoBtn"></button>
+              <div class="msg" id="dlMsg" role="status"></div>
+            </div>
+          </div>
+        </div>
+        <p class="note" data-i18n="note"></p>
+      </aside>
+    </div>
+  </main>
+
+  <!-- ================= MY HEALTH DASHBOARD (v3.0) ================= -->
+  <main id="dash" class="view" hidden>
+    <a class="back" href="#" data-i18n="back"></a>
+    <div class="ph"><h1 data-i18n="dH"></h1><p data-i18n="dP"></p></div>
+    <div class="dtabs" role="tablist" data-i18n-aria="dTabs">
+      <button class="dtab" type="button" role="tab" id="tab-assess" aria-controls="pane-assess" aria-selected="true" data-tab="assess"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="3"/><path d="M9 4h6v3H9zM9 14l2 2 4-4"/></svg></span><span><b data-i18n="tab1"></b><small data-i18n="tab1s"></small></span></button>
+      <button class="dtab" type="button" role="tab" id="tab-chart" aria-controls="pane-chart" aria-selected="false" tabindex="-1" data-tab="chart"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 20V11M10 20V4M16 20v-6M22 20H2"/></svg></span><span><b data-i18n="tab2"></b><small data-i18n="tab2s"></small></span></button>
+      <button class="dtab" type="button" role="tab" id="tab-hist" aria-controls="pane-hist" aria-selected="false" tabindex="-1" data-tab="hist"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b data-i18n="tab3"></b><small data-i18n="tab3s"></small></span></button>
+      <button class="dtab" type="button" role="tab" id="tab-priv" aria-controls="pane-priv" aria-selected="false" tabindex="-1" data-tab="priv"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8.2-8 9-4.8-.8-8-4.5-8-9V6l8-3z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span><span><b data-i18n="tab4"></b><small data-i18n="tab4s"></small></span></button>
+    </div>
+    <section class="dpane narrow" id="pane-assess" role="tabpanel" aria-labelledby="tab-assess"><div id="wProg"></div><div id="wBody"></div></section>
+    <section class="dpane" id="pane-chart" role="tabpanel" aria-labelledby="tab-chart" hidden><div id="cBody"></div></section>
+    <section class="dpane narrow" id="pane-hist" role="tabpanel" aria-labelledby="tab-hist" hidden></section>
+    <section class="dpane narrow" id="pane-priv" role="tabpanel" aria-labelledby="tab-priv" hidden></section>
+  </main>
+
+  <!-- chart modal + confirm dialog -->
+  <div class="mdl" id="chartModal" hidden role="dialog" aria-modal="true" aria-labelledby="chartTitle">
+    <div class="mbox"><div class="mhd"><h2 id="chartTitle" data-i18n="chH"></h2><button type="button" class="btn sm" id="chartClose" data-i18n="chClose"></button></div><div id="chartBody"></div></div>
+  </div>
+  <div class="mdl" id="askModal" hidden role="alertdialog" aria-modal="true" aria-labelledby="askT" aria-describedby="askP">
+    <div class="mbox sm"><h2 class="h3 lg" id="askT"></h2><p id="askP"></p><div class="acts"><button type="button" class="btn" id="askNo"></button><button type="button" class="btn primary" id="askYes"></button></div></div>
+  </div>
+
+  <footer class="sitefoot" data-i18n="disclaimer"></footer>
+</div>
+
+<script>
+const T={
+mn:{
+ title:'Эрүүл Мэндийн Эрсдэл',brand:'Эрсдэлийн үнэлгээ',home:'Нүүр хуудас',langLabel:'Хэл сонгох',themeDark:'Харанхуй',themeLight:'Гэрэлтэй',
+ heroSec:'Эрүүл мэндийн урьдчилсан шалгалт',heroH1:'Эрсдэлээ эрт мэдвэл, эрүүл насаар амьдарна',
+ heroLead:'10 энгийн үзүүлэлтээ оруулахад машин сургалтын загвар таны эрүүл мэндийн эрсдэлийг Бага, Дунд, Өндөр гэж тооцоолж, хэвийн хэмжээтэй харьцуулан зөвлөмж өгнө.',
+ calc:'Тооцоолох →',heroSmall:'Ойролцоогоор 2 минут · бүртгэл шаардлагагүй',
+ chipBP:'Даралт',chipBPv:'118 / 76 мм.муб',chipGlu:'Глюкоз',chipGluv:'104 мг/дл',chipRisk:'Эрсдэл',chipRiskv:'Бага · 82%',
+ howH:'Хэрхэн ажилладаг вэ',howP:'Гурван алхамд үр дүн, тайлан гарна.',
+ s1b:'1-р алхам',s1h:'Мэдээллээ оруул',s1p:'Нас, даралт, глюкоз зэрэг 10 үзүүлэлтээ slider эсвэл тоогоор бөглөнө.',
+ s2b:'2-р алхам',s2h:'Тооцоолох товч дар',s2p:'300 модтой Random Forest загвар эрсдэлийн түвшин, магадлалыг гаргана.',
+ s3b:'3-р алхам',s3h:'Тайлан, зөвлөмж ав',s3p:'Хэвийнтэй харьцуулсан зураг, зөвлөмжийг үзэж, тайланг эмчид үзүүлэхээр татна.',
+ guideH:'Үзүүлэлтээ хаанаас авах вэ',guideP:'Хэмжилтээ мэдэхгүй бол доорх зааврыг дага. Талбар бүрийн хажууд байгаа “?” тэмдэг дээр дарахад тайлбар гарна.',
+ g1h:'Цусны даралт',g1p:'5 минут амарч, нуруугаа түшиж суугаад гараа зүрхний түвшинд тавьж хэмжинэ. Хоёр тооноос ДЭЭДЭХИЙГ (систолын) оруулна.',g1n:'120/80 → 120',
+ g2h:'Цусан дах глюкоз',g2p:'8 цаг хоол идэхгүй өлөн байхад глюкометрээр эсвэл лабораторид хэмжүүлнэ. Нэгж нь мг/дл.',g2n:'5.5 ммоль/л ≈ 99 мг/дл',
+ g3h:'Холестерин',g3p:'Липидийн шинжилгээнд “Total cholesterol” (нийт холестерин) гэсэн мөрийг оруулна. Нэгж нь мг/дл.',g3n:'5.2 ммоль/л ≈ 200 мг/дл',
+ g4h:'Биеийн жингийн индекс',g4p:'Өндөр, жингээ бичихэд индекс автоматаар тооцогдоно. Мэддэг бол шууд оруулж болно.',g4n:'жин ÷ өндөр² (м)',
+ alertH:'Анхааруулга',al1:'Энэ бол урьдчилсан тооцоо. Эмчийн үзлэг, оношийг орлохгүй.',al2:'Эмийн хэрэглээгээ үр дүнд тулгуурлан өөрөө өөрчилж болохгүй.',
+ al3:'Цээж базлах, амьсгал давчдах, нэг талын мэдээ алдагдах, ярианы хямрал зэрэг шинж тэмдэг илэрвэл тооцоолол хийлгүй <b>103</b> руу яаралтай залгана.',
+ al4:'Таны оруулсан мэдээлэл хаана ч илгээгдэхгүй, зөвхөн таны хөтөч дээр боловсруулагдана.',
+ privH:'🛡️ Таны эрүүл мэндийн мэдээллийн нууцлал найдвартай хамгаалагдана.',
+ privP:'Оруулсан бүх мэдээлэл зөвхөн таны хөтөч дээр боловсруулагдана. Сервер рүү илгээгдэхгүй, хадгалагдахгүй.',
+ privChip:'Мэдээлэл таны хөтөч дээр л боловсруулагдана',
+ modelH:'Загвар юуг харгалзан үздэг вэ',modelP:'Эрсдэлийг доорх 10 үзүүлэлтээр тооцоолно.',
+ endH:'Эрсдэлээ одоо шалгаж үз',back:'← Танилцуулга руу буцах',phH:'Эрүүл мэндийн үзүүлэлтээ оруул',phP:'Бүх талбарыг бөглөөд “Тооцоолох” товч дарна. Ногоон хэсэг нь хэвийн хязгаар.',
+ secBasic:'Үндсэн мэдээлэл',secClin:'Эмнэлзүйн үзүүлэлт',secLife:'Амьдралын хэв маяг',
+ helpAria:'Тайлбар: {l}',normalPre:'Хэвийн: {n}',
+ 'F.Age.label':'Нас','F.Age.hint':'Age','F.Age.unit':'нас','F.Age.help':'Одоогийн насаа бүтэн жилээр оруулна.',
+ 'F.BMI.label':'Биеийн жингийн индекс','F.BMI.hint':'BMI','F.BMI.unit':'кг/м²','F.BMI.help':'Биеийн жин өндрөөсөө тохирч байгаа эсэхийг харуулдаг тоо. Жинг (кг) өндрийн (метр) квадратад хуваана. Доорх тооцоололд өндөр, жингээ бичвэл автоматаар бөглөгдөнө.',
+ 'F.Systolic_BP.label':'Систолын даралт','F.Systolic_BP.hint':'Systolic BP','F.Systolic_BP.unit':'мм.муб','F.Systolic_BP.help':'Даралт хэмжигч дээр хоёр тоо гардаг (жишээ нь 120/80). Систолын даралт нь тэдгээрийн ДЭЭДЭХ тоо, зүрх агших үед судсанд үүсэх даралт. “мм.муб” нь мөнгөн усны баганын миллиметр. 5 минут амарсны дараа хэмжинэ.',
+ 'F.Glucose.label':'Цусан дах глюкоз','F.Glucose.hint':'Glucose','F.Glucose.unit':'мг/дл','F.Glucose.help':'Цусан дахь сахарын хэмжээ. 8 цагаас дээш хоол идээгүй (өлөн) үеийн хариуг оруулна. Хариу ммоль/л-ээр гарсан бол 18-аар үржүүлж мг/дл болгоно (5.5 ммоль/л ≈ 99 мг/дл).',
+ 'F.Cholesterol.label':'Холестерин','F.Cholesterol.hint':'Cholesterol','F.Cholesterol.unit':'мг/дл','F.Cholesterol.help':'Цусан дахь нийт холестерин. Липидийн шинжилгээнд “Total cholesterol” гэж бичигддэг. Хариу ммоль/л-ээр гарсан бол 38.7-оор үржүүлж мг/дл болгоно (5.2 ммоль/л ≈ 200 мг/дл).',
+ 'F.Exercise_Days_Per_Week.label':'Дасгал хөдөлгөөн','F.Exercise_Days_Per_Week.hint':'Exercise days','F.Exercise_Days_Per_Week.unit':'өдөр/7хоног','F.Exercise_Days_Per_Week.help':'7 хоногийн хэдэн өдөр 30 минутаас дээш хөдөлгөөн (хурдан алхалт, гүйлт, дугуй, бие галзуу дасгал) хийдгийг оруулна.',
+ 'F.Sleep_Hours.label':'Нойр','F.Sleep_Hours.hint':'Sleep hours','F.Sleep_Hours.unit':'цаг','F.Sleep_Hours.help':'Нэг өдөр өдрийн дунджаар хэдэн цаг унтдагаа оруулна. Насанд хүрэгчдэд 7–9 цаг тохиромжтой.',
+ 'Gender.label':'Хүйс','Gender.hint':'Gender','Gender.o0':'Эмэгтэй','Gender.o1':'Эрэгтэй','Gender.help':'Загвар хүйсийг 0 (эмэгтэй), 1 (эрэгтэй) гэж ойлгоно.',
+ 'Smoking.label':'Тамхи татдаг эсэх','Smoking.hint':'Smoking','Smoking.o0':'Үгүй','Smoking.o1':'Тийм','Smoking.help':'Одоо тамхи татдаг бол “Тийм” гэж сонгоно.',
+ 'Family_History.label':'Удамд өвчтэй эсэх','Family_History.short':'Удамшил','Family_History.hint':'Family History','Family_History.o0':'Үгүй','Family_History.o1':'Тийм','Family_History.help':'Эцэг эх, ах эгч нарын хэн нэгэнд зүрх судас, даралт ихсэлт, чихрийн шижин зэрэг өвчин оношлогдсон бол “Тийм” гэж сонгоно.',
+ bmiCalcT:'БЖИ-г өндөр, жингээс автоматаар тооцох',hLab:'Өндөр (см)',wLab:'Жин (кг)',bmiErr:'Өндөр 100–230 см, жин 30–250 кг хооронд байна.',
+ bmiAuto:'Тооцоолсон БЖИ: <b>{b}</b> {p}',bmiManual:'БЖИ-г гараар оруулсан. Өндөр, жинг өөрчилбөл дахин тооцогдоно.',
+ warnField:'Энэ талбарыг бөглөнө үү. Зөвшөөрөгдөх утга: {a}–{b}.',warnFixed:'Утга хоосон эсвэл {a}–{b} хязгаараас гадуур байсан тул {v} болгон засав.',
+ reset:'Анхны утга',go:'Эрсдэлийг тооцоолох',goLoading:'Модель ачаалж байна…',goFail:'Модель ачаалж чадсангүй',
+ emptyH:'Үр дүн энд гарна',emptyP:'Зүүн талын мэдээллээ шалгаад “Эрсдэлийг тооцоолох” товч дарна уу.',
+ stale:'Мэдээлэл өөрчлөгдсөн. Шинэчлэхийн тулд “Эрсдэлийг тооцоолох” товч дахин дарна уу.',
+ riskK:'Эрсдэлийн түвшин','lvl.Low':'Бага','lvl.Moderate':'Дунд','lvl.High':'Өндөр',
+ 'mn.Low':'Бага эрсдэлтэй','mn.Moderate':'Дунд эрсдэлтэй','mn.High':'Өндөр эрсдэлтэй',
+ 'sum.Low':'Одоогийн үзүүлэлтээр эрсдэл бага байна. Тогтмол үзлэг, эрүүл хэв маягаа үргэлжлүүлээрэй.',
+ 'sum.Moderate':'Зарим үзүүлэлт анхаарал шаардаж байна. Доорх зөвлөмжийг дагаж, ойрын хугацаанд эмчийн үзлэгт хамрагдахыг зөвлөе.',
+ 'sum.High':'Эрсдэл өндөр гарлаа. Удаан хүлээлгүй эмчид хандаж, дэлгэрэнгүй шинжилгээ хийлгэхийг зөвлөж байна.',
+ ringAria:'Эрсдэлийн магадлалын график: Бага {a}%, Дунд {b}%, Өндөр {c}%',
+ expH:'Яагаад ийм үр дүн гарав?',expSub:'Үр дүнг загвар тодорхойлно. Доорх төлөв нь таны утгыг хэвийн хязгаартай харьцуулсан харьцуулалт.',
+ expBase:'Загварын 300 модны дундаж магадлалаар «{l}» түвшин {p}% гарлаа.',expFlag:'Хэвийн хязгаараас гадуур байгаа үзүүлэлт: {list}.',expNone:'Хэмжигдэхүйц бүх үзүүлэлт хэвийн хязгаарт байна.',
+ factH:'Эрсдэлд нөлөөлөх хүчин зүйлс',factSub:'Өнгөт тэмдэг нь таны утгын төлөв. Зураас нь загвар тооцоолохдоо тухайн үзүүлэлтэд ерөнхийдөө өгдөг жин (бүх хүнд ижил), таны хувийн нөлөө биш.',
+ wLabel:'жин',
+ probH:'Магадлалын задаргаа',probSub:'Загварын 300 модны санал.',
+ cmpH:'Хэвийн хэмжээтэй харьцуулалт',cmpSub:'Хар цэг нь таны утга. Ногоон хэсэг хэвийн, шар анхаарах, улаан өндөр эсвэл эрсдэлтэй.',lgN:'Хэвийн',lgW:'Анхаарах',lgR:'Өндөр',
+ tipsH:'Зөвлөмж',
+ repH:'Эмчид үзүүлэх тайлан',repP:'Үр дүн, хэвийнтэй харьцуулалт, зөвлөмжийг нэг хуудас тайлан болгон татна. HTML файлыг хөтөч дээр нээгээд хэвлэж болно, эсвэл PDF хэлбэрээр шууд хадгална.',
+ repBtn:'Тайлан татах',pdfBtn:'PDF хадгалах',redoBtn:'Дахин үнэлгээ хийх',
+ saved:'Тайлан хадгалагдлаа. Файлыг хөтөч дээр нээж, хэвлэх эсвэл PDF болгоно уу.',downloaded:'Тайлан татагдлаа. Файлыг хөтөч дээр нээж, хэвлэх эсвэл PDF болгоно уу.',
+ declined:'Хадгалахаас татгалзсан.',dlFail:'Файл татаж чадсангүй. Дахин оролдоно уу.',pdfWait:'PDF бэлдэж байна…',pdfOk:'PDF файл хадгалагдлаа.',pdfFail:'PDF үүсгэж чадсангүй. Интернет холболтоо шалгаад дахин оролдоно уу.',
+ note:'Энэ нь машин сургалтын загварын урьдчилсан тооцоо бөгөөд эмчийн оношийг орлохгүй. Эрүүл мэндийн асуудлаар эмчтэй зөвлөлдөнө үү.',
+ disclaimer:'Энэхүү үнэлгээ нь зөвхөн ерөнхий мэдээлэл өгөх зорилготой бөгөөд эмнэлгийн онош биш, мэргэжлийн эмчийн зөвлөгөөг орлохгүй.',
+ 'z.under':'Дутуу','z.normal':'Хэвийн','z.over':'Илүүдэл','z.obese':'Таргалалт','z.low':'Бага','z.elev':'Өндөр хэвийн','z.high':'Өндөр','z.watch':'Анхаарах','z.toomuch':'Хэт их','z.riskf':'Эрсдэлтэй','z.attn':'Анхаарах',
+ 'h.weight':'Жин','h.bp':'Цусны даралт','h.glu':'Глюкоз','h.chol':'Холестерин','h.smoke':'Тамхи','h.move':'Хөдөлгөөн','h.sleep':'Нойр','h.fam':'Удам','h.good':'Сайн байна',
+ 'a.bmiObese':'БЖИ {v} нь таргалалтын түвшинд байна. Хоолны дэглэм, хөдөлгөөнөө эмчтэй зөвлөлдөж төлөвлөөрэй.',
+ 'a.bmiOver':'БЖИ {v} нь жингийн илүүдэлтэй байна. 5–7% жин хасахад зүрх, судасны эрсдэл мэдэгдэхүйц буурдаг.',
+ 'a.bmiUnder':'БЖИ {v} нь жингийн дутагдалтай байна. Хоол тэжээлийн зөвлөгөө авах нь зүйтэй.',
+ 'a.bpHigh':'Систолын даралт {v} өндөр байна. Давс бага хэрэглэж, эмчид үзүүлж даралтаа давтан хэмжүүлээрэй.',
+ 'a.bpElev':'Систолын даралт {v} хэвийнээс арай өндөр байна. Давс, кофейнээ багасгаж, тогтмол хэмжиж байгаарай.',
+ 'a.gluHigh':'Глюкоз {v} мг/дл өндөр байна. Чихрийн шижингийн шинжилгээнд хамрагдахыг зөвлөж байна.',
+ 'a.gluWatch':'Глюкоз {v} мг/дл хэвийн дээд хязгаарт ойр байна. Чихэрлэг хүнс, ундаагаа багасгаарай.',
+ 'a.cholHigh':'Холестерин {v} мг/дл өндөр байна. Ханасан өөх тос багатай хоол идэж, липидийн шинжилгээ хийлгээрэй.',
+ 'a.cholWatch':'Холестерин {v} мг/дл хэвийн хэмжээнээс бага зэрэг дээгүүр байна.',
+ 'a.smoke':'Тамхи татахаа зогсоох нь эрсдэлийг бууруулах хамгийн үр дүнтэй алхам. Тамхинаас гарахад туслах үйлчилгээг эмнэлгээс авах боломжтой.',
+ 'a.exLow':'7 хоногт {v} өдөр хөдөлгөөн хийж байна. Долоо хоногт 150 минут дунд зэргийн дасгал хийхийг зорь.',
+ 'a.sleepLow':'{v} цаг нойр бага байна. Насанд хүрэгчид 7–9 цаг унтах нь тохиромжтой.',
+ 'a.sleepHigh':'{v} цаг нойр хэт их байна. Нойрны хэм, чанараа шалгаарай.',
+ 'a.fam':'Удамд өвчтэй тул эрүүл мэндийн үзлэг, шинжилгээнд жилд нэг удаа тогтмол хамрагдаарай.',
+ 'a.good':'Таны үзүүлэлтүүд эрүүл хэмжээнд байна. Одоогийн хэв маягаа хадгалаарай.',
+ rTitle:'Эрүүл мэндийн эрсдэлийн тайлан',rDate:'Огноо',rModel:'Random Forest загвар (300 мод)',rLevel:'Эрсдэлийн түвшин',rProb:'Магадлал',
+ rTblH:'Оруулсан үзүүлэлт ба хэвийн хэмжээ',rC1:'Үзүүлэлт',rC2:'Утга',rC3:'Хэвийн хязгаар',rC4:'Дүгнэлт',rTips:'Зөвлөмж',rExpl:'Үр дүнгийн тайлбар',
+ rFoot:'Энэ тайлан нь машин сургалтын загварын урьдчилсан тооцоо бөгөөд эмчийн оношийг орлохгүй. Глюкоз, холестерин мг/дл нэгжээр, даралт мм.муб-аар. Хүйсийг 0 = эмэгтэй, 1 = эрэгтэй гэж кодолсон.',
+ rNo:'Үгүй',rNormalWord:'Хэвийн',
+ /* ---- v3.0 dashboard ---- */
+ navDash:'Миний эрүүл мэнд',heroDash:'Миний эрүүл мэндийн самбар',
+ dH:'Миний эрүүл мэндийн үнэлгээ',dP:'Шинэ үнэлгээ хийх, үр дүнгээ графикаар харах, түүхээ хянах, нууцлалаа удирдах нэг самбар.',dTabs:'Миний эрүүл мэндийн хэсгүүд',
+ tab1:'Шинэ үнэлгээ',tab1s:'Алхам алхмаар',tab2:'Графикаар харах',tab2s:'Үр дүнгийн график',tab3:'Үнэлгээний түүх',tab3s:'Хадгалсан үр дүн',tab4:'Нууцлалын тохиргоо',tab4s:'Таны мэдээлэл',
+ wS1:'Үндсэн',wS2:'Эмнэлзүй',wS3:'Хэв маяг',wS4:'Шалгах',wStep:'Алхам {n} / {m}',
+ wRevH:'Мэдээллээ шалгана уу',wRevP:'Бүгд зөв бол “Эрсдэлийг тооцоолох” товч дарна. Засах бол тухайн хэсгийн “Засах” товчийг дарна.',wEdit:'Засах',
+ wBack:'← Өмнөх',wNext:'Дараах →',wKeep:'Алхам хооронд шилжихэд оруулсан мэдээлэл хадгалагдана. Хуудсыг хаахад арилна.',
+ resH:'Үнэлгээний үр дүн',btnChart:'📊 Графикаар харах',btnFull:'Дэлгэрэнгүй тайлан, зөвлөмж',btnSave:'💾 Түүхэнд хадгалах',wEditAns:'Хариултаа засах',wNew:'Шинэ үнэлгээ эхлүүлэх',
+ saveOn:'Түүхэнд хадгалагдлаа.',saveDup:'Энэ үр дүн түүхэнд аль хэдийн хадгалагдсан байна.',saveOff:'Түүх хадгалалт унтраалттай тул энэ үр дүн хадгалагдаагүй.',autoSaved:'Таны зөвшөөрлөөр түүхэнд хадгалагдлаа.',
+ cH:'Үнэлгээний түүхийг хадгалах уу?',cP:'Үр дүн болон оруулсан утгууд зөвхөн энэ төхөөрөмжийн хөтөч (localStorage) дээр хадгалагдана. Сервер рүү илгээгдэхгүй. Хүссэн үедээ устгаж болно.',cYes:'Зөвшөөрч хадгалах',cYes2:'Зөвшөөрөх',cNo:'Болих',
+ chH:'Үр дүнгийн график',chSub:'Загварын бодит тооцооллын үр дүнгээс зурсан. Зохиомол оноо, хувь ашиглаагүй.',chDate:'Үнэлгээ: {d}',chClose:'Хаах',
+ chT1:'Магадлал',chT2:'Үзүүлэлтүүд',chT3:'Хүчин зүйлс',chPick:'Үнэлгээ:',cSrcNow:'Одоогийн үр дүн',
+ chNone:'График харахын тулд эхлээд үнэлгээ хийнэ үү.',chStart:'Үнэлгээ эхлэх',chHint:'Үзүүлэлт дээр дарж эсвэл хулганаа аваачиж дэлгэрэнгүйг харна уу.',
+ chZoneNote:'Нас, хүйсэд хэвийн хязгаар тооцоогүй. Тоолсон үзүүлэлт: БЖИ, даралт, глюкоз, холестерин, хөдөлгөөн, нойр, тамхи, удам.',
+ chFacInfo:'Загвар “{n}” үзүүлэлтэд ерөнхийдөө {w}% жин өгдөг (бүх хүнд ижил). Таны утга: {v}.',
+ hH:'Үнэлгээний түүх',hCount:'{n} үнэлгээ хадгалагдсан',hEmpty:'Хадгалсан үнэлгээ алга. Үнэлгээ хийсний дараа “Түүхэнд хадгалах” товч дарна.',
+ hEmptyOff:'Түүх хадгалахыг зөвшөөрөөгүй тул үнэлгээ автоматаар хадгалагдахгүй. Нууцлалын тохиргооноос идэвхжүүлж болно.',hToPriv:'Нууцлалын тохиргоо руу',
+ hView:'Харах',hDel:'Устгах',hCmp:'Харьцуулах',hPick:'Харьцуулахын тулд 2 үнэлгээ сонгоно уу.',hPicked:'{n} / 2 сонгосон',hSelAria:'Харьцуулахаар сонгох: {d}',
+ hDelQ:'Энэ үнэлгээг устгах уу?',hDelP:'Устгасны дараа сэргээх боломжгүй.',hDeleted:'Үнэлгээ устгагдлаа.',hBackList:'← Жагсаалт руу',
+ hCmpH:'Хоёр үнэлгээний харьцуулалт',hOld:'Өмнөх',hNew:'Дараах',hProbH:'Магадлалын өөрчлөлт',hIndH:'Үзүүлэлтийн өөрчлөлт',hPP:'п.п.',
+ hLvl:'Эрсдэлийн түвшин: {a} → {b}',hLvlSame:'Эрсдэлийн түвшин өөрчлөгдөөгүй: {l}',hCInd:'Үзүүлэлт',hCChg:'Өөрчлөлт',
+ hImproved:'Сайжирсан',hWorse:'Муудсан',hSame:'Өөрчлөлтгүй',hChanged:'Өөрчлөгдсөн',hDetH:'Хадгалсан үнэлгээ',
+ pvH:'Нууцлалын тохиргоо',pvSave:'Үнэлгээний түүхийг энэ төхөөрөмж дээр хадгалах',pvSaveP:'Анхны утга нь “Идэвхгүй”: зөвшөөрөөгүй бол юу ч хадгалагдахгүй.',pvOn:'Идэвхтэй',pvOff:'Идэвхгүй',
+ pvDataH:'Миний хадгалсан мэдээлэл',pvStored:'Хадгалсан үнэлгээ: {n}',pvViewHist:'Түүхээ харах',pvDelAll:'Хадгалсан бүх мэдээллээ устгах',
+ pvDeleted:'Хадгалсан бүх мэдээлэл устгагдлаа.',pvOffNote:'Түүх хадгалахыг унтраалаа. Өмнө хадгалсан үнэлгээ хэвээр байгаа тул хүсвэл устгаарай.',
+ delAllQ:'Хадгалсан бүх мэдээллийг устгах уу?',delAllP:'Түүхэнд хадгалсан бүх үнэлгээ энэ төхөөрөмжөөс бүрмөсөн устна.',
+ pvNoStore:'Хөтөч хадгалалтыг хориглосон байна: түүх зөвхөн энэ хуудас нээлттэй байх хооронд л байна.',
+ pvHowH:'Мэдээллийг хэрхэн боловсруулдаг вэ',
+ pv1:'Таны оруулсан утга, тооцоолол бүгд хөтөч дээр хийгдэнэ. Эрүүл мэндийн мэдээлэл сервер рүү илгээгдэхгүй.',
+ pv2:'Хуудас нээгдэхэд зөвхөн загварын файл (model.json) ачаалагдана. Энэ файл таны мэдээллийг агуулдаггүй.',
+ pv3:'Түүхийг зөвхөн таны зөвшөөрлөөр хөтчийн localStorage-д хадгална. Хөтчийн өгөгдлөө цэвэрлэх эсвэл дээрх товчоор устгана.',
+ pv4:'Фонтыг Google Fonts-оос ачаалдаг тул хөтчийн хандалт (IP хаяг) тэр сервер дээр харагдаж болно. Таны эрүүл мэндийн мэдээлэл тэнд дамжихгүй.',
+ pv5:'Хадгалсан мэдээлэл зөвхөн энэ төхөөрөмж, энэ хөтөч дээр байна. Өөр төхөөрөмж рүү автоматаар дамжихгүй. Хамтын компьютер дээр хадгалахгүй байхыг зөвлөе.'
+},
+en:{
+ title:'Health Risk Assessment',brand:'Risk Assessment',home:'Home',langLabel:'Language',themeDark:'Dark',themeLight:'Light',
+ heroSec:'Preventive health screening',heroH1:'Know your risk early, live a healthier life',
+ heroLead:'Enter 10 simple health indicators and a machine learning model estimates your health risk as Low, Medium or High, compares your values with normal ranges and gives practical advice.',
+ calc:'Calculate →',heroSmall:'About 2 minutes · no sign-up needed',
+ chipBP:'Blood pressure',chipBPv:'118 / 76 mmHg',chipGlu:'Glucose',chipGluv:'104 mg/dL',chipRisk:'Risk',chipRiskv:'Low · 82%',
+ howH:'How it works',howP:'Three steps to your result and report.',
+ s1b:'Step 1',s1h:'Enter your data',s1p:'Fill in 10 indicators such as age, blood pressure and glucose with sliders or numbers.',
+ s2b:'Step 2',s2h:'Press Calculate',s2p:'A 300-tree Random Forest model returns your risk level and probabilities.',
+ s3b:'Step 3',s3h:'Get your report and advice',s3p:'Review the comparison with normal ranges and the advice, then save a report to show your doctor.',
+ guideH:'Where to find your values',guideP:'If you do not know a measurement, follow the guide below. Tap the “?” next to any field for an explanation.',
+ g1h:'Blood pressure',g1p:'Rest for 5 minutes, sit with your back supported and your arm at heart level. Enter the TOP number (systolic) of the two readings.',g1n:'120/80 → 120',
+ g2h:'Blood glucose',g2p:'Measure after fasting for at least 8 hours with a glucose meter or at a laboratory. The unit is mg/dL.',g2n:'5.5 mmol/L ≈ 99 mg/dL',
+ g3h:'Cholesterol',g3p:"Use the “Total cholesterol” line of your lipid panel. The unit is mg/dL.",g3n:'5.2 mmol/L ≈ 200 mg/dL',
+ g4h:'Body mass index',g4p:'Enter your height and weight and the index is calculated automatically. If you already know it, you can type it in directly.',g4n:'weight ÷ height² (m)',
+ alertH:'Important notice',al1:'This is a preliminary estimate. It does not replace a medical examination or diagnosis.',al2:'Do not change your medication on your own based on this result.',
+ al3:'If you have chest pain, shortness of breath, numbness on one side of the body or difficulty speaking, do not use this tool. Call your local emergency number immediately (<b>103</b> in Mongolia).',
+ al4:'The information you enter is not sent anywhere. It is processed only in your browser.',
+ privH:'🛡️ Privacy First. Your Health Data Matters.',
+ privP:'Everything you enter is processed only in your browser. Nothing is sent to a server or stored.',
+ privChip:'Your data is processed only in your browser',
+ modelH:'What the model takes into account',modelP:'Risk is estimated from the following 10 indicators.',
+ endH:'Check your risk now',back:'← Back to introduction',phH:'Enter your health indicators',phP:'Fill in every field and press “Calculate”. The green zone is the normal range.',
+ secBasic:'Basic information',secClin:'Clinical indicators',secLife:'Lifestyle',
+ helpAria:'Explanation: {l}',normalPre:'Normal: {n}',
+ 'F.Age.label':'Age','F.Age.hint':'','F.Age.unit':'years','F.Age.help':'Enter your current age in full years.',
+ 'F.BMI.label':'Body mass index (BMI)','F.BMI.hint':'','F.BMI.unit':'kg/m²','F.BMI.help':'A number that shows whether your weight is proportionate to your height. It is weight (kg) divided by height (metres) squared. Enter your height and weight in the calculator below and it fills in automatically.',
+ 'F.Systolic_BP.label':'Systolic blood pressure','F.Systolic_BP.hint':'','F.Systolic_BP.unit':'mmHg','F.Systolic_BP.help':'A blood pressure monitor shows two numbers (for example 120/80). Systolic pressure is the TOP number: the pressure in your arteries when the heart contracts. “mmHg” means millimetres of mercury. Measure after resting for 5 minutes.',
+ 'F.Glucose.label':'Blood glucose (fasting)','F.Glucose.hint':'','F.Glucose.unit':'mg/dL','F.Glucose.help':'The amount of sugar in your blood. Enter a result taken after fasting for at least 8 hours. If your result is in mmol/L, multiply by 18 to get mg/dL (5.5 mmol/L ≈ 99 mg/dL).',
+ 'F.Cholesterol.label':'Total cholesterol','F.Cholesterol.hint':'','F.Cholesterol.unit':'mg/dL','F.Cholesterol.help':"Total cholesterol in your blood, shown as “Total cholesterol” on a lipid panel. If your result is in mmol/L, multiply by 38.7 to get mg/dL (5.2 mmol/L ≈ 200 mg/dL).",
+ 'F.Exercise_Days_Per_Week.label':'Physical activity','F.Exercise_Days_Per_Week.hint':'','F.Exercise_Days_Per_Week.unit':'days/week','F.Exercise_Days_Per_Week.help':'Enter on how many days per week you do more than 30 minutes of activity such as brisk walking, running, cycling or a workout.',
+ 'F.Sleep_Hours.label':'Sleep','F.Sleep_Hours.hint':'','F.Sleep_Hours.unit':'hours','F.Sleep_Hours.help':'Enter the average number of hours you sleep per day. 7–9 hours is recommended for adults.',
+ 'Gender.label':'Gender','Gender.hint':'','Gender.o0':'Female','Gender.o1':'Male','Gender.help':'The model reads gender as 0 (female) or 1 (male).',
+ 'Smoking.label':'Do you smoke?','Smoking.hint':'','Smoking.o0':'No','Smoking.o1':'Yes','Smoking.help':'Choose “Yes” if you currently smoke.',
+ 'Family_History.label':'Family history of disease','Family_History.short':'Family history','Family_History.hint':'','Family_History.o0':'No','Family_History.o1':'Yes','Family_History.help':'Choose “Yes” if a parent or sibling has been diagnosed with heart disease, high blood pressure, diabetes or a similar condition.',
+ bmiCalcT:'Calculate BMI automatically from height and weight',hLab:'Height (cm)',wLab:'Weight (kg)',bmiErr:'Height must be 100–230 cm and weight 30–250 kg.',
+ bmiAuto:'Calculated BMI: <b>{b}</b> {p}',bmiManual:'BMI was entered manually. Change height or weight to recalculate.',
+ warnField:'Please fill in this field. Allowed range: {a}–{b}.',warnFixed:'The value was empty or outside {a}–{b}, so it was set to {v}.',
+ reset:'Reset values',go:'Calculate risk',goLoading:'Loading model…',goFail:'Could not load the model',
+ emptyH:'Your result will appear here',emptyP:'Check the information on the left and press “Calculate risk”.',
+ stale:'Your information has changed. Press “Calculate risk” again to update the result.',
+ riskK:'Risk level','lvl.Low':'Low','lvl.Moderate':'Medium','lvl.High':'High',
+ 'mn.Low':'Low risk','mn.Moderate':'Medium risk','mn.High':'High risk',
+ 'sum.Low':'Based on your current values the risk is low. Keep up regular check-ups and your healthy lifestyle.',
+ 'sum.Moderate':'Some of your values need attention. Follow the advice below and consider seeing a doctor in the near future.',
+ 'sum.High':'Your risk is high. Please see a doctor without delay and ask about further tests.',
+ ringAria:'Risk probability chart: Low {a}%, Medium {b}%, High {c}%',
+ expH:'Why this result?',expSub:'The model determines the result. The status marks below compare your values with normal ranges.',
+ expBase:'The model’s average probability across 300 trees gives the “{l}” level {p}%.',expFlag:'Values outside the normal range: {list}.',expNone:'All measurable values are within the normal range.',
+ factH:'Factors that influence risk',factSub:'The coloured tag is the status of your value. The bar is the general weight the model gives each indicator (the same for everyone), not your personal contribution.',
+ wLabel:'weight',
+ probH:'Probability breakdown',probSub:'Votes of the model’s 300 trees.',
+ cmpH:'Comparison with normal ranges',cmpSub:'The dark dot is your value. Green is normal, yellow needs attention, red is high or at risk.',lgN:'Normal',lgW:'Borderline',lgR:'High',
+ tipsH:'Recommendations',
+ repH:'Report for your doctor',repP:'Save a one-page report with your result, the comparison with normal ranges and the advice. Open the HTML file in your browser to print it, or save a PDF directly.',
+ repBtn:'Download report',pdfBtn:'Save as PDF',redoBtn:'Re-assess',
+ saved:'Report saved. Open the file in your browser to print it or save it as a PDF.',downloaded:'Report downloaded. Open the file in your browser to print it or save it as a PDF.',
+ declined:'Saving was cancelled.',dlFail:'Could not download the file. Please try again.',pdfWait:'Preparing PDF…',pdfOk:'PDF saved.',pdfFail:'Could not create the PDF. Check your internet connection and try again.',
+ note:'This is a preliminary estimate from a machine learning model and does not replace a medical diagnosis. Please consult a doctor about any health concerns.',
+ disclaimer:'This assessment provides general informational estimates only. It is not a medical diagnosis and does not replace professional medical advice.',
+ 'z.under':'Underweight','z.normal':'Normal','z.over':'Overweight','z.obese':'Obese','z.low':'Low','z.elev':'Elevated','z.high':'High','z.watch':'Borderline','z.toomuch':'Too much','z.riskf':'At risk','z.attn':'Notable',
+ 'h.weight':'Weight','h.bp':'Blood pressure','h.glu':'Glucose','h.chol':'Cholesterol','h.smoke':'Smoking','h.move':'Activity','h.sleep':'Sleep','h.fam':'Family history','h.good':'Looking good',
+ 'a.bmiObese':'Your BMI of {v} is in the obese range. Discuss a diet and activity plan with your doctor.',
+ 'a.bmiOver':'Your BMI of {v} is in the overweight range. Losing 5–7% of body weight noticeably lowers heart and vascular risk.',
+ 'a.bmiUnder':'Your BMI of {v} is in the underweight range. Nutrition advice is worth seeking.',
+ 'a.bpHigh':'Your systolic pressure of {v} is high. Cut down on salt, see a doctor and have your pressure measured again.',
+ 'a.bpElev':'Your systolic pressure of {v} is slightly above normal. Reduce salt and caffeine and keep measuring regularly.',
+ 'a.gluHigh':'Your glucose of {v} mg/dL is high. Getting tested for diabetes is recommended.',
+ 'a.gluWatch':'Your glucose of {v} mg/dL is close to the upper normal limit. Cut down on sugary food and drinks.',
+ 'a.cholHigh':'Your cholesterol of {v} mg/dL is high. Eat less saturated fat and have a lipid panel done.',
+ 'a.cholWatch':'Your cholesterol of {v} mg/dL is slightly above the normal range.',
+ 'a.smoke':'Quitting smoking is the most effective step to lower your risk. Cessation support is available through your healthcare provider.',
+ 'a.exLow':'You are active {v} day(s) per week. Aim for 150 minutes of moderate exercise per week.',
+ 'a.sleepLow':'{v} hours of sleep is too little. Adults should aim for 7–9 hours.',
+ 'a.sleepHigh':'{v} hours of sleep is too much. Check your sleep rhythm and quality.',
+ 'a.fam':'Because of your family history, have a health check-up and tests once a year.',
+ 'a.good':'Your values are within healthy ranges. Keep up your current lifestyle.',
+ rTitle:'Health Risk Assessment Report',rDate:'Date',rModel:'Random Forest model (300 trees)',rLevel:'Risk level',rProb:'Probability',
+ rTblH:'Entered values and normal ranges',rC1:'Indicator',rC2:'Value',rC3:'Normal range',rC4:'Status',rTips:'Recommendations',rExpl:'Result explanation',
+ rFoot:'This report is a preliminary estimate from a machine learning model and does not replace a medical diagnosis. Glucose and cholesterol are in mg/dL, blood pressure in mmHg. Gender is coded 0 = female, 1 = male.',
+ rNo:'No',rNormalWord:'Normal',
+ /* ---- v3.0 dashboard ---- */
+ navDash:'My Health',heroDash:'My Health Dashboard',
+ dH:'My Health Assessment',dP:'One place to take a new assessment, view results as charts, track your history and control your privacy.',dTabs:'My Health sections',
+ tab1:'New assessment',tab1s:'Step by step',tab2:'View as chart',tab2s:'Result charts',tab3:'Assessment history',tab3s:'Saved results',tab4:'Privacy control',tab4s:'Your data',
+ wS1:'Basics',wS2:'Clinical',wS3:'Lifestyle',wS4:'Review',wStep:'Step {n} of {m}',
+ wRevH:'Review your information',wRevP:'If everything is correct, press “Calculate risk”. To change something, press “Edit” in that section.',wEdit:'Edit',
+ wBack:'← Back',wNext:'Next →',wKeep:'Your entries are kept as you move between steps. They are cleared when you close the page.',
+ resH:'Assessment result',btnChart:'📊 View as Chart',btnFull:'Full report & advice',btnSave:'💾 Save to history',wEditAns:'Edit my answers',wNew:'Start a new assessment',
+ saveOn:'Saved to history.',saveDup:'This result is already saved in your history.',saveOff:'History saving is off, so this result was not saved.',autoSaved:'Saved to your history (you allowed this).',
+ cH:'Save your assessment history?',cP:"Your results and the values you entered are stored only in this device’s browser (localStorage). They are not sent to a server. You can delete them at any time.",cYes:'Allow and save',cYes2:'Allow',cNo:'Cancel',
+ chH:'Result charts',chSub:"Drawn from the model’s actual output. No invented scores or percentages.",chDate:'Assessment: {d}',chClose:'Close',
+ chT1:'Probability',chT2:'Indicators',chT3:'Factors',chPick:'Assessment:',cSrcNow:'Current result',
+ chNone:'Take an assessment first to see a chart.',chStart:'Start assessment',chHint:'Tap or hover over an item for details.',
+ chZoneNote:'Age and gender have no normal range. Counted: BMI, blood pressure, glucose, cholesterol, activity, sleep, smoking, family history.',
+ chFacInfo:'The model gives “{n}” a general weight of {w}% (the same for everyone). Your value: {v}.',
+ hH:'Assessment history',hCount:'{n} saved assessments',hEmpty:'No saved assessments yet. After an assessment, press “Save to history”.',
+ hEmptyOff:'History saving is off, so assessments are not saved automatically. You can turn it on in Privacy control.',hToPriv:'Go to Privacy control',
+ hView:'View',hDel:'Delete',hCmp:'Compare',hPick:'Select 2 assessments to compare.',hPicked:'{n} / 2 selected',hSelAria:'Select for comparison: {d}',
+ hDelQ:'Delete this assessment?',hDelP:'This cannot be undone.',hDeleted:'Assessment deleted.',hBackList:'← Back to list',
+ hCmpH:'Comparison of two assessments',hOld:'Earlier',hNew:'Later',hProbH:'Probability change',hIndH:'Indicator changes',hPP:'pp',
+ hLvl:'Risk level: {a} → {b}',hLvlSame:'Risk level unchanged: {l}',hCInd:'Indicator',hCChg:'Change',
+ hImproved:'Improved',hWorse:'Worsened',hSame:'Unchanged',hChanged:'Changed',hDetH:'Saved assessment',
+ pvH:'Privacy control',pvSave:'Save assessment history on this device',pvSaveP:'Off by default: nothing is saved unless you allow it.',pvOn:'On',pvOff:'Off',
+ pvDataH:'My saved data',pvStored:'Saved assessments: {n}',pvViewHist:'View my history',pvDelAll:'Delete all my saved data',
+ pvDeleted:'All your saved data has been deleted.',pvOffNote:'History saving is now off. Assessments saved earlier are still there; delete them if you wish.',
+ delAllQ:'Delete all saved data?',delAllP:'Every assessment saved in your history will be permanently removed from this device.',
+ pvNoStore:'Your browser blocks storage: history only lasts while this page stays open.',
+ pvHowH:'How your data is processed',
+ pv1:'Everything you enter and every calculation stays in your browser. Your health data is not sent to a server.',
+ pv2:'When the page opens, only the model file (model.json) is downloaded. It contains none of your data.',
+ pv3:'History is stored in your browser’s localStorage only if you allow it. Clear your browser data or use the button above to delete it.',
+ pv4:'Fonts are loaded from Google Fonts, so your browser’s connection (IP address) may be visible to that server. None of your health data goes there.',
+ pv5:'Saved data stays on this device and browser only. It is not transferred to other devices. Avoid saving on a shared computer.'
+}};
+
+/* ================= logic (unchanged from v1.0 unless marked v2) ================= */
+const KEYS=['Age','Gender','BMI','Systolic_BP','Glucose','Cholesterol','Smoking','Exercise_Days_Per_Week','Sleep_Hours','Family_History'];
+const LV={Low:{c:'var(--low)',name:'Low'},Moderate:{c:'var(--mid)',name:'Medium'},High:{c:'var(--high)',name:'High'}};
+/* zones: [from,to,class,labelKey]; g = normal, w = watch, r = high */
+const F={
+ Age:{min:18,max:90,step:1,val:45},
+ BMI:{min:14,max:45,step:0.1,val:25.6,normal:'18.5–24.9',zones:[[14,18.5,'w','under'],[18.5,25,'g','normal'],[25,30,'w','over'],[30,45.01,'r','obese']]},
+ Systolic_BP:{min:80,max:220,step:1,val:125,normal:'90–129',zones:[[80,90,'w','low'],[90,130,'g','normal'],[130,140,'w','elev'],[140,220.01,'r','high']]},
+ Glucose:{min:60,max:300,step:1,val:100,normal:'70–99',zones:[[60,70,'w','low'],[70,100,'g','normal'],[100,126,'w','watch'],[126,300.01,'r','high']]},
+ Cholesterol:{min:100,max:350,step:1,val:190,normal:'< 200',zones:[[100,200,'g','normal'],[200,240,'w','watch'],[240,350.01,'r','high']]},
+ Exercise_Days_Per_Week:{min:0,max:7,step:1,val:3,normal:'3–7',zones:[[0,3,'w','low'],[3,7.01,'g','normal']]},
+ Sleep_Hours:{min:3,max:12,step:0.5,val:7,normal:'7–9',zones:[[3,7,'w','low'],[7,9.01,'g','normal'],[9.01,12.01,'w','toomuch']]}
+};
+const SEG=['Gender','Smoking','Family_History'];
+const ORDER=[['sec','secBasic'],'Gender','Age','BMI',['sec','secClin'],'Systolic_BP','Glucose','Cholesterol',['sec','secLife'],'Smoking','Exercise_Days_Per_Week','Sleep_Hours','Family_History'];
+const DEF_H=170,DEF_W=74;
+/* v2: the model's own overall feature importances (feature_importances_ of the supplied RandomForest, %) */
+const IMP={BMI:17.0,Systolic_BP:16.3,Age:13.9,Glucose:11.0,Exercise_Days_Per_Week:9.9,Cholesterol:9.7,Sleep_Hours:6.5,Smoking:5.6,Family_History:5.6,Gender:4.4};
+const CMP=['BMI','Systolic_BP','Glucose','Cholesterol','Exercise_Days_Per_Week','Sleep_Hours'];
+const state={},defaults={};
+let M=null,last=null,bhv=DEF_H,bwv=DEF_W,goState='loading';
+const openHelp=new Set();
+const $=id=>document.getElementById(id);
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+
+/* ---------- v2: language ---------- */
+let lang=store.get('hra_lang')==='en'?'en':'mn';
+const t=(k,v)=>{let s=T[lang][k];if(s==null)s=T.mn[k];if(s==null)s=k;if(v)for(const x in v)s=s.split('{'+x+'}').join(v[x]);return s};
+
+/* ---------- helpers ---------- */
+const CV={g:'var(--zg)',w:'var(--zw)',r:'var(--zr)'};
+const pct=(k,v)=>Math.min(100,Math.max(0,(v-F[k].min)/(F[k].max-F[k].min)*100));
+function trackCSS(k){
+  const f=F[k];if(!f.zones)return 'var(--zn)';
+  const s=f.zones.map(([a,b,c])=>`${CV[c]} ${pct(k,a).toFixed(2)}% ${pct(k,b).toFixed(2)}%`);
+  return `linear-gradient(to right,${s.join(',')})`;
+}
+function zoneOf(k,v){const f=F[k];if(!f.zones)return null;return f.zones.find(z=>v>=z[0]&&v<z[1])||f.zones[f.zones.length-1]}
+const pill=z=>z?`<em class="pill ${z[2]}">${t('z.'+z[3])}</em>`:'';
+const fmt=(k,v)=>F[k].step<1?Number(v).toFixed(1):String(v);
+const unit=k=>t('F.'+k+'.unit');
+
+KEYS.forEach(k=>{state[k]=defaults[k]=F[k]?F[k].val:0});
+
+/* ---------- build form (v2: reads values from state so a language change keeps the data) ---------- */
+function helpBtn(k,label){
+  return `<button type="button" class="help" aria-expanded="${openHelp.has(k)}" aria-controls="h-${k}" aria-label="${t('helpAria',{l:label})}" data-help="${k}">?</button>`;
+}
+function build(){
+  let html='';
+  for(const it of ORDER){
+    if(Array.isArray(it)){html+=`<p class="sec">${t(it[1])}</p>`;continue}
+    const k=it,hint=t(k in F?'F.'+k+'.hint':k+'.hint');
+    const hintH=hint?`<span class="hint">${hint}</span>`:'';
+    if(SEG.includes(k)){
+      const lab=t(k+'.label');
+      html+=`<div class="field"><div class="row"><div class="lw"><span class="lab">${lab}</span>${hintH}${helpBtn(k,lab)}</div>
+      <div class="seg" id="seg-${k}" role="group" aria-label="${lab}"><button type="button" data-v="0" aria-pressed="${state[k]===0}">${t(k+'.o0')}</button><button type="button" data-v="1" aria-pressed="${state[k]===1}">${t(k+'.o1')}</button></div></div>
+      <div class="helpbox" id="h-${k}" ${openHelp.has(k)?'':'hidden'}>${t(k+'.help')}</div></div>`;
+    }else{
+      const f=F[k],lab=t('F.'+k+'.label');
+      html+=`<div class="field" data-key="${k}"><div class="row"><div class="lw"><label for="n-${k}">${lab}</label>${hintH}${helpBtn(k,lab)}</div>
+      <div class="num"><input id="n-${k}" type="number" inputmode="decimal" min="${f.min}" max="${f.max}" step="${f.step}" value="${fmt(k,state[k])}"><span class="u">${unit(k)}</span></div></div>
+      <div class="warn" id="w-${k}" role="alert"></div>
+      <div class="helpbox" id="h-${k}" ${openHelp.has(k)?'':'hidden'}>${t('F.'+k+'.help')}</div>
+      ${k==='BMI'?`<div class="bmicalc"><span class="t">${t('bmiCalcT')}</span><div class="in">
+        <label>${t('hLab')}<input id="bh" type="number" inputmode="decimal" min="100" max="230" value="${bhv}"></label>
+        <label>${t('wLab')}<input id="bw" type="number" inputmode="decimal" min="30" max="250" value="${bwv}"></label></div><span class="o" id="bo"></span></div>`:''}
+      <input id="r-${k}" type="range" min="${f.min}" max="${f.max}" step="${f.step}" value="${state[k]}" aria-label="${lab}" style="--track:${trackCSS(k)}">
+      <div class="scale"><span>${f.min}</span><span class="mid">${f.normal?`<span class="nrm">${t('normalPre',{n:f.normal})}</span>`:''}<span id="st-${k}"></span></span><span>${f.max}</span></div></div>`;
+    }
+  }
+  $('fields').innerHTML=html;
+  for(const k of Object.keys(F)){
+    const n=$('n-'+k),r=$('r-'+k),w=$('w-'+k);
+    const set=(v,fromNum)=>{v=parseFloat(v);if(isNaN(v))return;v=Math.min(F[k].max,Math.max(F[k].min,v));state[k]=v;r.value=v;if(!fromNum)n.value=fmt(k,v);stat(k);touch();if(k==='BMI'&&!fromNum)syncBO()};
+    r.addEventListener('input',()=>{w.textContent='';n.removeAttribute('aria-invalid');set(r.value)});
+    n.addEventListener('input',()=>{w.textContent='';n.removeAttribute('aria-invalid');set(n.value,true)});
+    n.addEventListener('blur',()=>{
+      const v=parseFloat(n.value),bad=n.value.trim()===''||isNaN(v)||v<F[k].min||v>F[k].max;
+      n.value=fmt(k,state[k]);
+      if(bad){w.textContent=t('warnFixed',{a:F[k].min,b:F[k].max,v:fmt(k,state[k])})}
+    });
+    stat(k);
+  }
+  const bh=$('bh'),bw=$('bw');
+  const calc=()=>{
+    bhv=bh.value;bwv=bw.value;
+    const h=parseFloat(bh.value),w=parseFloat(bw.value);
+    if(!(h>=100&&h<=230&&w>=30&&w<=250)){$('bo').textContent=t('bmiErr');return}
+    let b=Math.round(w/((h/100)**2)*10)/10;const c=Math.min(F.BMI.max,Math.max(F.BMI.min,b));
+    state.BMI=c;$('n-BMI').value=fmt('BMI',c);$('r-BMI').value=c;stat('BMI');syncBO(b);touch();
+  };
+  bh.addEventListener('input',calc);bw.addEventListener('input',calc);
+  syncBO();
+}
+function syncBO(b){
+  const h=parseFloat($('bh').value),w=parseFloat($('bw').value);
+  if(b==null){b=(h>=100&&w>=30)?Math.round(w/((h/100)**2)*10)/10:null}
+  const z=zoneOf('BMI',state.BMI);
+  $('bo').innerHTML=b!=null&&Math.abs(b-state.BMI)<0.06?t('bmiAuto',{b:b,p:pill(z)}):t('bmiManual');
+}
+function stat(k){const e=$('st-'+k);if(e)e.innerHTML=pill(zoneOf(k,state[k]))}
+function syncSeg(k){document.querySelectorAll('#seg-'+k+' button').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.v===state[k])))}
+function touch(){if(last)$('stale').hidden=false}
+
+/* ---------- model (unchanged) ---------- */
+function predict(x){
+  const {roots,f,t,l,r,v,classes}=M,p=[0,0,0],xs=KEYS.map(k=>Math.fround(x[k]));
+  for(const root of roots){let n=root;while(f[n]>=0)n=xs[f[n]]<=t[n]?l[n]:r[n];const lv=v[r[n]];p[0]+=lv[0];p[1]+=lv[1];p[2]+=lv[2]}
+  const out={};classes.forEach((c,i)=>out[c]=p[i]/roots.length);return out;
+}
+/* advice: same thresholds as v1.0; v2 returns language-neutral keys so it can be re-rendered in either language */
+function advice(s){
+  const a=[],add=(cls,h,k,v)=>a.push({cls,h,k,v});
+  if(s.BMI>=30)add('d','weight','bmiObese',s.BMI);
+  else if(s.BMI>=25)add('w','weight','bmiOver',s.BMI);
+  else if(s.BMI<18.5)add('w','weight','bmiUnder',s.BMI);
+  if(s.Systolic_BP>=140)add('d','bp','bpHigh',s.Systolic_BP);
+  else if(s.Systolic_BP>=130)add('w','bp','bpElev',s.Systolic_BP);
+  if(s.Glucose>=126)add('d','glu','gluHigh',s.Glucose);
+  else if(s.Glucose>=100)add('w','glu','gluWatch',s.Glucose);
+  if(s.Cholesterol>=240)add('d','chol','cholHigh',s.Cholesterol);
+  else if(s.Cholesterol>=200)add('w','chol','cholWatch',s.Cholesterol);
+  if(s.Smoking)add('d','smoke','smoke');
+  if(s.Exercise_Days_Per_Week<3)add('w','move','exLow',s.Exercise_Days_Per_Week);
+  if(s.Sleep_Hours<7)add('w','sleep','sleepLow',s.Sleep_Hours);
+  else if(s.Sleep_Hours>9)add('w','sleep','sleepHigh',s.Sleep_Hours);
+  if(s.Family_History)add('w','fam','fam');
+  if(!a.length)add('','good','good');
+  return a;
+}
+const tipTxt=x=>t('a.'+x.k,{v:x.v});
+
+/* ---------- v2: validation ---------- */
+function validate(){
+  let first=null;
+  for(const k of Object.keys(F)){
+    const n=$('n-'+k),w=$('w-'+k),v=parseFloat(n.value);
+    const bad=n.value.trim()===''||isNaN(v)||v<F[k].min||v>F[k].max;
+    if(bad){w.textContent=t('warnField',{a:F[k].min,b:F[k].max});n.setAttribute('aria-invalid','true');if(!first)first=n}else n.removeAttribute('aria-invalid');
+  }
+  if(first){first.focus();return false}
+  return true;
+}
+
+/* ---------- compute + render ---------- */
+function compute(){
+  if(!M)return;
+  if(!validate())return;
+  const s={...state},p=predict(s);
+  const level=Object.keys(p).reduce((a,b)=>p[a]>=p[b]?a:b);
+  last={s,p,level,tips:advice(s)};
+  $('emptyState').hidden=true;$('out').hidden=false;$('stale').hidden=true;
+  $('dlMsg').textContent='';
+  render();onCalcResult();
+  if(matchMedia('(max-width:860px)').matches)$('risk').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function ring(p,level){
+  const R=52,C=2*Math.PI*R;let off=0;
+  const segs=['Low','Moderate','High'].map(c=>{const len=p[c]*C;const e=`<circle r="${R}" cx="70" cy="70" fill="none" stroke="${LV[c].c}" stroke-width="16" stroke-dasharray="${len.toFixed(2)} ${(C-len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}"/>`;off+=len;return e}).join('');
+  const lab=t('ringAria',{a:Math.round(p.Low*100),b:Math.round(p.Moderate*100),c:Math.round(p.High*100)});
+  return `<svg class="ring" viewBox="0 0 140 140" role="img" aria-label="${lab}"><g transform="rotate(-90 70 70)"><circle r="${R}" cx="70" cy="70" fill="none" stroke="var(--surface)" stroke-width="16" opacity=".7"/>${segs}</g><text class="rp" x="70" y="72" text-anchor="middle">${Math.round(p[level]*100)}%</text><text class="rl" x="70" y="90" text-anchor="middle">${LV[level].name}</text></svg>`;
+}
+function factorList(s){
+  return Object.keys(IMP).sort((a,b)=>IMP[b]-IMP[a]).map(k=>{
+    let z=null,val;
+    if(SEG.includes(k)){
+      val=t(k+'.o'+s[k]);
+      if(k==='Smoking')z=[0,0,s[k]?'r':'g',s[k]?'riskf':'normal'];
+      if(k==='Family_History')z=[0,0,s[k]?'w':'g',s[k]?'attn':'normal'];
+    }else{val=fmt(k,s[k])+' '+unit(k);z=zoneOf(k,s[k])}
+    const lab=t(k in F?'F.'+k+'.label':(k==='Family_History'?'Family_History.short':k+'.label'));
+    return {k,lab,val,z,imp:IMP[k]};
+  });
+}
+function render(){
+  if(!last)return;
+  const {s,p,level}=last;
+  const risk=$('risk');risk.dataset.level=level;
+  risk.innerHTML=`<div class="rt"><div class="k">${t('riskK')}</div><div class="big">${LV[level].name}</div><div class="mn">${t('mn.'+level)} · ${Math.round(p[level]*100)}%</div><p class="sum">${t('sum.'+level)}</p></div>${ring(p,level)}`;
+  /* explanation + factors (v2) */
+  const rows=factorList(s),flagged=rows.filter(r=>r.z&&r.z[2]!=='g').map(r=>r.lab);
+  const maxImp=Math.max(...rows.map(r=>r.imp));
+  $('pExpl').innerHTML=`<p class="h3">${t('expH')}</p>
+   <p class="expl">${t('expBase',{l:t('lvl.'+level),p:Math.round(p[level]*100)})} ${flagged.length?t('expFlag',{list:flagged.join(', ')}):t('expNone')}<span class="e2">${t('expSub')}</span></p>
+   <p class="h3">${t('factH')}</p><p class="sub">${t('factSub')}</p>
+   <div class="frows">${rows.map(r=>`<div class="fr"><div class="t"><span class="nm">${r.lab}</span><span class="vl"><b>${r.val}</b> ${r.z?`<em class="pill ${r.z[2]}">${t('z.'+r.z[3])}</em>`:''}</span></div><div class="wb"><div class="tr"><i style="width:${(r.imp/maxImp*100).toFixed(0)}%"></i></div><small>${r.imp.toFixed(1)}%</small></div></div>`).join('')}</div>`;
+  /* probabilities (v1) */
+  const names={Low:'Low · '+t('lvl.Low'),Moderate:'Medium · '+t('lvl.Moderate'),High:'High · '+t('lvl.High')};
+  $('pProb').innerHTML=`<p class="h3">${t('probH')}</p><p class="sub">${t('probSub')}</p><div class="bars">${['Low','Moderate','High'].map(c=>`<div class="bar"><div class="t"><span>${names[c]}</span><b>${(p[c]*100).toFixed(1)}%</b></div><div class="track"><div class="fill" style="width:${(p[c]*100).toFixed(1)}%;background:${LV[c].c}"></div></div></div>`).join('')}</div>`;
+  /* comparison (v1) */
+  $('pCmp').innerHTML=`<p class="h3">${t('cmpH')}</p><p class="sub">${t('cmpSub')}</p><div class="cmps">${CMP.map(k=>{const f=F[k],v=s[k],z=zoneOf(k,v);
+    return `<div><div class="ct"><span class="cn">${t('F.'+k+'.label')}</span><span class="cv"><b>${fmt(k,v)}</b> ${unit(k)} ${pill(z)}</span></div>
+    <div class="ctrack" style="--track:${trackCSS(k)}"><i style="left:${pct(k,v).toFixed(1)}%"></i></div>
+    <div class="cs"><span>${f.min}</span><span>${t('normalPre',{n:f.normal+' '+unit(k)})}</span><span>${f.max}</span></div></div>`}).join('')}</div>
+    <div class="legend"><span><i style="background:var(--zg)"></i>${t('lgN')}</span><span><i style="background:var(--zw)"></i>${t('lgW')}</span><span><i style="background:var(--zr)"></i>${t('lgR')}</span></div>`;
+  /* advice (v1 content) */
+  $('pTips').innerHTML=`<p class="h3">${t('tipsH')}</p><ul class="tips" style="margin-top:12px">${last.tips.map(x=>`<li><i class="${x.cls}"></i><span><b>${t('h.'+x.h)}.</b> ${tipTxt(x)}</span></li>`).join('')}</ul>`;
+}
+
+/* ---------- report (HTML download + PDF) ---------- */
+function reportCSS(sc,rc){return `${sc}{font-family:Manrope,'Segoe UI',Arial,sans-serif;color:#0d2b30;line-height:1.5;background:#fff}
+${sc} h1{font-size:24px;margin:0 0 4px}${sc} h2{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:#0e7f8a;margin:26px 0 8px}
+${sc} .m{color:#587479;font-size:13px}${sc} .risk{display:block;border:2px solid ${rc};border-radius:14px;padding:16px 20px;margin-top:18px;background:#fff;color:#0d2b30}${sc} .risk b{font-size:30px;color:${rc}}
+${sc} table{width:100%;border-collapse:collapse;font-size:14px}${sc} th,${sc} td{text-align:left;padding:8px 10px;border-bottom:1px solid #d3e6e6}${sc} th{background:#e8f4f4;font-size:12.5px}
+${sc} li{margin:5px 0;font-size:14px}${sc} p{margin:6px 0;font-size:14px}${sc} .foot{margin-top:28px;font-size:12px;color:#587479;border-top:1px solid #d3e6e6;padding-top:12px}`}
+function reportInner(){
+  const {s,p,level,tips}=last,ds=new Date().toISOString().slice(0,10);
+  const cls={g:'#12936b',w:'#9a6200',r:'#c4352f'},yn=v=>v?t('Smoking.o1'):t('Smoking.o0');
+  const zc=z=>z?`<b style="color:${cls[z[2]]}">${t('z.'+z[3])}</b>`:'—';
+  const rows=[
+   [t('F.Age.label'),s.Age+' '+unit('Age'),'—','—'],[t('Gender.label'),t('Gender.o'+s.Gender),'—','—'],
+   ...CMP.map(k=>[t('F.'+k+'.label'),fmt(k,s[k])+' '+unit(k),F[k].normal+' '+unit(k),zc(zoneOf(k,s[k]))]),
+   [t('Smoking.label'),yn(s.Smoking),t('Smoking.o0'),s.Smoking?zc([0,0,'r','riskf']):zc([0,0,'g','normal'])],
+   [t('Family_History.label'),yn(s.Family_History),t('Family_History.o0'),s.Family_History?zc([0,0,'w','attn']):zc([0,0,'g','normal'])]];
+  const flagged=factorList(s).filter(r=>r.z&&r.z[2]!=='g').map(r=>r.lab);
+  const expl=t('expBase',{l:t('lvl.'+level),p:Math.round(p[level]*100)})+' '+(flagged.length?t('expFlag',{list:flagged.join(', ')}):t('expNone'));
+  return `<h1>${t('rTitle')}</h1><div class="m">${t('rDate')}: ${ds} · ${t('rModel')}</div>
+<div class="risk"><div class="m">${t('rLevel')}</div><b>${LV[level].name}</b> · ${t('mn.'+level)} (${Math.round(p[level]*100)}%)
+<div class="m" style="margin-top:6px">${t('rProb')}: Low ${(p.Low*100).toFixed(1)}% · Medium ${(p.Moderate*100).toFixed(1)}% · High ${(p.High*100).toFixed(1)}%</div></div>
+<h2>${t('rExpl')}</h2><p>${expl}</p>
+<h2>${t('rTblH')}</h2>
+<table><tr><th>${t('rC1')}</th><th>${t('rC2')}</th><th>${t('rC3')}</th><th>${t('rC4')}</th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</table>
+<h2>${t('rTips')}</h2><ul>${tips.map(x=>`<li><b>${t('h.'+x.h)}.</b> ${tipTxt(x)}</li>`).join('')}</ul>
+<div class="foot">${t('rFoot')}<br>${t('disclaimer')}</div>`;
+}
+const RC=()=>({Low:'#12936b',Moderate:'#9a6200',High:'#c4352f'}[last.level]);
+function reportHTML(){
+  const ds=new Date().toISOString().slice(0,10);
+  return `<!doctype html><html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${t('rTitle')} ${ds}</title>
+<style>body{margin:32px auto;max-width:760px;padding:0 20px}${reportCSS('body',RC())}</style></head><body>${reportInner()}</body></html>`;
+}
+const fname=ext=>`${lang==='en'?'health-risk-report':'erguuliin-ersdel-tailan'}-${new Date().toISOString().slice(0,10)}.${ext}`;
+let dlCap=null;
+async function initDL(){try{dlCap=await claude.use('downloads')}catch(e){dlCap=null}}
+async function saveFile(name,data,mime,okKey){
+  const m=$('dlMsg');m.style.color='var(--low)';
+  if(dlCap){
+    try{await dlCap.save({filename:name,data});m.textContent=t(okKey==='pdfOk'?'pdfOk':'saved')}
+    catch(e){m.style.color='var(--muted)';m.textContent=e&&e.code==='declined'?t('declined'):t('dlFail')}
+    return;
+  }
+  try{
+    const blob=data instanceof Blob?data:new Blob([data],{type:mime}),u=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(u),2000);m.textContent=t(okKey==='pdfOk'?'pdfOk':'downloaded');
+  }catch(e){m.style.color='var(--muted)';m.textContent=t('dlFail')}
+}
+$('dlBtn').addEventListener('click',()=>{if(last)saveFile(fname('html'),reportHTML(),'text/html;charset=utf-8','saved')});
+
+/* v2: PDF without external libraries: the report is drawn on canvas pages, saved as JPEG and wrapped in a minimal PDF */
+function pdfFromJPEGs(jpgs,w,h){
+  const enc=new TextEncoder(),parts=[],offs=[];let len=0;
+  const push=b=>{if(typeof b==='string')b=enc.encode(b);parts.push(b);len+=b.length};
+  const obj=(n,fn)=>{offs[n]=len;push(n+' 0 obj\n');fn();push('\nendobj\n')};
+  const N=jpgs.length,total=3+3*N;
+  push('%PDF-1.4\n');
+  obj(1,()=>push('<< /Type /Catalog /Pages 2 0 R >>'));
+  obj(2,()=>push(`<< /Type /Pages /Kids [${jpgs.map((_,i)=>(3+3*i)+' 0 R').join(' ')}] /Count ${N} >>`));
+  jpgs.forEach((j,i)=>{
+    const p=3+3*i,c='q 595.28 0 0 841.89 0 0 cm /Im0 Do Q';
+    obj(p,()=>push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 ${p+1} 0 R >> >> /Contents ${p+2} 0 R >>`));
+    obj(p+1,()=>{push(`<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${j.length} >>\nstream\n`);push(j);push('\nendstream')});
+    obj(p+2,()=>push(`<< /Length ${c.length} >>\nstream\n${c}\nendstream`));
+  });
+  const xo=len;
+  push(`xref\n0 ${total}\n0000000000 65535 f \n`);
+  for(let n=1;n<total;n++)push(String(offs[n]).padStart(10,'0')+' 00000 n \n');
+  push(`trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xo}\n%%EOF`);
+  return new Blob(parts,{type:'application/pdf'});
+}
+function drawReportPages(){
+  const {s,p,level,tips}=last,rc=RC(),W=1240,H=1754,MX=90,MY=90,CW=W-2*MX,FONT='Manrope,"Segoe UI",Arial,sans-serif';
+  const pages=[];let cv,cx,y;
+  const newPage=()=>{cv=document.createElement('canvas');cv.width=W;cv.height=H;cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,W,H);cx.textBaseline='alphabetic';pages.push(cv);y=MY};
+  const ensure=h=>{if(y+h>H-MY)newPage()};
+  const font=(w,px)=>{cx.font=`${w} ${px}px ${FONT}`};
+  const wrap=(text,maxW)=>{const out=[];let line='';for(const word of String(text).split(/\s+/)){const tst=line?line+' '+word:word;if(cx.measureText(tst).width>maxW&&line){out.push(line);line=word}else line=tst}if(line)out.push(line);return out};
+  const para=(text,px,color,w='500',x=MX,maxW=CW,lh=1.5)=>{font(w,px);cx.fillStyle=color;for(const l of wrap(text,maxW)){ensure(px*lh);y+=px*lh;cx.fillText(l,x,y-px*0.3)}};
+  const h2=txt=>{ensure(90);y+=44;font('800',26);cx.fillStyle='#0e7f8a';cx.fillText(txt.toUpperCase(),MX,y);y+=14};
+  newPage();
+  font('800',44);cx.fillStyle='#0d2b30';cx.fillText(t('rTitle'),MX,y+44);y+=60;
+  font('500',22);cx.fillStyle='#587479';cx.fillText(`${t('rDate')}: ${new Date().toISOString().slice(0,10)} · ${t('rModel')}`,MX,y+22);y+=50;
+  /* risk box */
+  const bh=190;cx.lineWidth=4;cx.strokeStyle=rc;cx.beginPath();cx.roundRect(MX,y,CW,bh,22);cx.stroke();
+  font('600',22);cx.fillStyle='#587479';cx.fillText(t('rLevel'),MX+30,y+46);
+  font('800',64);cx.fillStyle=rc;cx.fillText(LV[level].name,MX+30,y+118);
+  const nw=cx.measureText(LV[level].name).width;font('700',30);cx.fillText(`  ·  ${t('mn.'+level)} (${Math.round(p[level]*100)}%)`,MX+30+nw,y+118);
+  font('500',22);cx.fillStyle='#587479';cx.fillText(`${t('rProb')}: Low ${(p.Low*100).toFixed(1)}% · Medium ${(p.Moderate*100).toFixed(1)}% · High ${(p.High*100).toFixed(1)}%`,MX+30,y+162);
+  y+=bh;
+  /* explanation */
+  const flagged=factorList(s).filter(r=>r.z&&r.z[2]!=='g').map(r=>r.lab);
+  h2(t('rExpl'));para(t('expBase',{l:t('lvl.'+level),p:Math.round(p[level]*100)})+' '+(flagged.length?t('expFlag',{list:flagged.join(', ')}):t('expNone')),25,'#0d2b30');
+  /* table */
+  h2(t('rTblH'));
+  const cols=[.34,.22,.22,.22].map(f=>f*CW),cls={g:'#12936b',w:'#9a6200',r:'#c4352f'};
+  const zt=z=>z?{txt:t('z.'+z[3]),col:cls[z[2]]}:{txt:'—',col:'#587479'};
+  const yn=v=>v?t('Smoking.o1'):t('Smoking.o0');
+  const rows=[[t('F.Age.label'),s.Age+' '+unit('Age'),'—',zt(null)],[t('Gender.label'),t('Gender.o'+s.Gender),'—',zt(null)],
+   ...CMP.map(k=>[t('F.'+k+'.label'),fmt(k,s[k])+' '+unit(k),F[k].normal+' '+unit(k),zt(zoneOf(k,s[k]))]),
+   [t('Smoking.label'),yn(s.Smoking),t('Smoking.o0'),zt([0,0,s.Smoking?'r':'g',s.Smoking?'riskf':'normal'])],
+   [t('Family_History.label'),yn(s.Family_History),t('Family_History.o0'),zt([0,0,s.Family_History?'w':'g',s.Family_History?'attn':'normal'])]];
+  const rowDraw=(cells,head)=>{
+    const rh=head?56:64;ensure(rh);
+    if(head){cx.fillStyle='#e8f4f4';cx.fillRect(MX,y,CW,rh)}
+    let x=MX+14;
+    cells.forEach((c,i)=>{const txt=typeof c==='string'?c:c.txt;font(head?'700':(i===3?'800':'500'),head?22:23);cx.fillStyle=head?'#0d2b30':(typeof c==='string'?'#0d2b30':c.col);
+      const ls=wrap(txt,cols[i]-24).slice(0,2);ls.forEach((l,j)=>cx.fillText(l,x,y+(ls.length>1?28+j*26:rh/2+8)));x+=cols[i]});
+    cx.fillStyle='#d3e6e6';cx.fillRect(MX,y+rh-2,CW,2);y+=rh;
+  };
+  rowDraw([t('rC1'),t('rC2'),t('rC3'),t('rC4')],true);rows.forEach(r=>rowDraw(r,false));
+  /* advice */
+  h2(t('rTips'));tips.forEach(x=>{para('•  '+t('h.'+x.h)+'. '+tipTxt(x),25,'#0d2b30','500',MX,CW,1.5);y+=8});
+  /* footer */
+  ensure(150);y+=30;cx.fillStyle='#d3e6e6';cx.fillRect(MX,y,CW,2);y+=8;
+  para(t('rFoot'),20,'#587479');y+=6;para(t('disclaimer'),20,'#587479','700');
+  return {pages,W,H};
+}
+async function makePDF(){
+  const {pages,W,H}=drawReportPages();
+  const jpgs=pages.map(c=>{const b=atob(c.toDataURL('image/jpeg',.92).split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u});
+  return pdfFromJPEGs(jpgs,W,H);
+}
+$('pdfBtn').addEventListener('click',async()=>{
+  if(!last)return;const b=$('pdfBtn'),m=$('dlMsg');b.disabled=true;m.style.color='var(--muted)';m.textContent=t('pdfWait');
+  try{const blob=await makePDF();await saveFile(fname('pdf'),blob,'application/pdf','pdfOk')}
+  catch(e){m.style.color='var(--high)';m.textContent=t('pdfFail')}
+  finally{b.disabled=false}
+});
+
+/* ================= v3.0: My Health dashboard (additive; all code above is unchanged except small marked hooks) ================= */
+const LVC={Low:'g',Moderate:'w',High:'r'};
+const ZRANK={g:0,w:1,r:2};
+const KEY_ORDER=['Gender','Age','BMI','Systolic_BP','Glucose','Cholesterol','Smoking','Exercise_Days_Per_Week','Sleep_Hours','Family_History'];
+const pad2=n=>String(n).padStart(2,'0');
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+function fmtDate(iso){const d=new Date(iso);return isNaN(d)?'—':`${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`}
+const lvName=l=>`${LV[l].name} · ${t('lvl.'+l)}`;
+const lvPill=l=>`<em class="pill ${LVC[l]}">${lvName(l)}</em>`;
+const pc1=v=>(v*100).toFixed(1)+'%';
+const labelOf=k=>t(k in F?'F.'+k+'.label':k+'.label');
+const valueOf=(k,s)=>SEG.includes(k)?t(k+'.o'+s[k]):fmt(k,s[k])+' '+unit(k);
+const sameVals=(a,b)=>KEYS.every(k=>a.s[k]===b.s[k]);
+
+/* ---------- storage: localStorage with in-memory fallback; nothing is stored unless the user consents ---------- */
+const HK='hra_history_v1',CK='hra_history_consent';
+const memStore={};let storageOK=true;
+try{localStorage.setItem('hra_probe','1');localStorage.removeItem('hra_probe')}catch(e){storageOK=false}
+const ds={
+  get(k){if(!storageOK)return memStore[k]==null?null:memStore[k];try{return localStorage.getItem(k)}catch(e){return null}},
+  set(k,v){if(!storageOK){memStore[k]=v;return}try{localStorage.setItem(k,v)}catch(e){storageOK=false;memStore[k]=v}},
+  del(k){delete memStore[k];try{localStorage.removeItem(k)}catch(e){}}
+};
+let consent=ds.get(CK)==='1';
+function cleanEntry(e){
+  if(!e||typeof e!=='object'||!e.s||!e.p)return null;
+  const s={};
+  for(const k of KEYS){let v=Number(e.s[k]);if(!isFinite(v))return null;s[k]=F[k]?Math.min(F[k].max,Math.max(F[k].min,v)):(v?1:0)}
+  const p={};
+  for(const c of ['Low','Moderate','High']){const v=Number(e.p[c]);if(!isFinite(v)||v<0||v>1)return null;p[c]=v}
+  const d=new Date(e.ts);if(isNaN(d))return null;
+  const level=['Low','Moderate','High'].includes(e.level)?e.level:['Low','Moderate','High'].reduce((a,b)=>p[a]>=p[b]?a:b);
+  return {id:String(e.id||d.getTime()).replace(/[^a-z0-9]/gi,'').slice(0,24)||String(d.getTime()),ts:d.toISOString(),s,p,level};
+}
+function loadHist(){try{const a=JSON.parse(ds.get(HK)||'[]');return (Array.isArray(a)?a:[]).map(cleanEntry).filter(Boolean).slice(0,50)}catch(e){return []}}
+let hist=loadHist();
+const saveHist=()=>ds.set(HK,JSON.stringify(hist.map(({id,ts,s,p,level})=>({id,ts,s,p,level}))));
+function setConsent(v){consent=!!v;ds.set(CK,consent?'1':'0')}
+function histAdd(res){
+  if(hist[0]&&sameVals(hist[0],res))return 'dup';
+  const e={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),ts:res.ts||new Date().toISOString(),s:{},p:{Low:res.p.Low,Moderate:res.p.Moderate,High:res.p.High},level:res.level};
+  KEYS.forEach(k=>e.s[k]=res.s[k]);
+  hist.unshift(e);if(hist.length>50)hist.length=50;saveHist();dashDynamic();return 'ok';
+}
+/* ask for consent when needed, then save */
+async function dSave(res){
+  if(!consent){
+    const ok=await ask({title:t('cH'),body:t('cP'),ok:t('cYes'),cancel:t('cNo')});
+    if(!ok)return null;setConsent(true);
+  }
+  return histAdd(res);
+}
+
+/* ---------- navigation that also works where hash links are blocked (previews, sandboxes) ---------- */
+let navHash=null;
+const curHash=()=>navHash!==null?navHash:location.hash;
+function go(h){navHash=h;try{location.hash=h}catch(e){}route()}
+window.addEventListener('hashchange',()=>{navHash=null});
+document.addEventListener('click',e=>{
+  const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a||e.defaultPrevented||e.button||e.metaKey||e.ctrlKey||e.shiftKey)return;
+  e.preventDefault();const h=a.getAttribute('href');go(h==='#'?'':h);
+});
+
+/* ---------- modals ---------- */
+const mstack=[],mFocus=[];let askRes=null;
+function modalOpen(id){
+  const m=$(id);mFocus.push(document.activeElement);m.hidden=false;mstack.push(id);
+  document.documentElement.classList.add('mlock');const f=m.querySelector('button');if(f)f.focus();
+}
+function modalClose(id,val){
+  $(id).hidden=true;const i=mstack.lastIndexOf(id);if(i>=0)mstack.splice(i,1);
+  if(!mstack.length)document.documentElement.classList.remove('mlock');
+  if(id==='askModal'&&askRes){const r=askRes;askRes=null;r(!!val)}
+  const f=mFocus.pop();if(f&&f.focus&&document.contains(f))f.focus();
+}
+document.addEventListener('keydown',e=>{
+  const id=mstack[mstack.length-1];if(!id)return;
+  if(e.key==='Escape'){e.preventDefault();modalClose(id,false);return}
+  if(e.key==='Tab'){
+    const els=[...$(id).querySelectorAll('button:not([disabled]),select,input,a[href]')].filter(x=>x.offsetParent!==null);if(!els.length)return;
+    const a=els[0],z=els[els.length-1];
+    if(e.shiftKey&&document.activeElement===a){e.preventDefault();z.focus()}else if(!e.shiftKey&&document.activeElement===z){e.preventDefault();a.focus()}
+  }
+});
+['chartModal','askModal'].forEach(id=>$(id).addEventListener('click',e=>{if(e.target.id===id)modalClose(id,false)}));
+$('chartClose').addEventListener('click',()=>modalClose('chartModal'));
+$('askYes').addEventListener('click',()=>modalClose('askModal',true));
+$('askNo').addEventListener('click',()=>modalClose('askModal',false));
+function ask(o){return new Promise(res=>{askRes=res;$('askT').textContent=o.title;$('askP').textContent=o.body;$('askYes').textContent=o.ok;$('askNo').textContent=o.cancel;$('askYes').className='btn '+(o.danger?'danger':'primary');modalOpen('askModal')})}
+
+/* ---------- animation helper: starts from 0 and eases to the real value ---------- */
+function animate(root){
+  setTimeout(()=>{
+    root.querySelectorAll('[data-len]').forEach(c=>c.style.strokeDasharray=c.dataset.len+' '+c.dataset.rest);
+    root.querySelectorAll('[data-left]').forEach(i=>i.style.left=i.dataset.left+'%');
+    root.querySelectorAll('[data-w]').forEach(i=>i.style.width=i.dataset.w+'%');
+  },40);
+}
+
+/* ---------- charts (only real model output + the user's own values) ---------- */
+const cst={modal:'prob',pane:'prob'};
+const CTABS=[['prob','chT1'],['ind','chT2'],['fac','chT3']];
+const zcount=rows=>{const c={g:0,w:0,r:0};rows.forEach(r=>{if(r.z)c[r.z[2]]++});return c};
+function chProb(res){
+  const {p,level}=res,R=80,C=2*Math.PI*R,order=['Low','Moderate','High'];let off=0;
+  const segs=order.map(c=>{
+    const len=p[c]*C;
+    const e=`<circle class="dseg" data-c="${c}" data-len="${len.toFixed(2)}" data-rest="${(C-len).toFixed(2)}" r="${R}" cx="100" cy="100" fill="none" stroke="${LV[c].c}" stroke-width="26" style="stroke-dasharray:0 ${C.toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" tabindex="0" role="img" aria-label="${esc(lvName(c))} ${pc1(p[c])}"/>`;
+    off+=len;return e;
+  }).join('');
+  const leg=order.map(c=>`<button type="button" class="dleg-i" data-c="${c}"><i style="background:${LV[c].c}"></i><span>${lvName(c)}</span><b>${pc1(p[c])}</b></button>`).join('');
+  return `<div class="donutw"><div class="dsvgw"><svg viewBox="0 0 200 200" aria-hidden="false">${segs}</svg><div class="dcen"><span class="dcv"></span><span class="dcn"></span></div></div>
+    <div><div class="dleg">${leg}</div></div></div>
+    <p class="cmsg"><b>${t('mn.'+level)}.</b> ${t('sum.'+level)}</p><p class="sub" style="margin-top:6px">${t('probSub')}</p>`;
+}
+function chInd(res){
+  const s=res.s,rows=factorList(s),zc=zcount(rows);
+  const tracks=CMP.map(k=>{
+    const f=F[k],v=s[k],z=zoneOf(k,v);
+    const info=`${t('F.'+k+'.label')}: ${fmt(k,v)} ${unit(k)} — ${t('z.'+z[3])}. ${t('normalPre',{n:f.normal+' '+unit(k)})}`;
+    return `<div class="ctr" tabindex="0" role="button" data-info="${esc(info)}" aria-label="${esc(info)}"><div class="ct"><span class="cn">${t('F.'+k+'.label')}</span><span class="cv"><b>${fmt(k,v)}</b> ${unit(k)} ${pill(z)}</span></div>
+      <div class="ctrack" style="--track:${trackCSS(k)}"><i data-left="${pct(k,v).toFixed(1)}"></i></div>
+      <div class="cs"><span>${f.min}</span><span>${t('normalPre',{n:f.normal+' '+unit(k)})}</span><span>${f.max}</span></div></div>`;
+  }).join('');
+  const chips=['Smoking','Family_History'].map(k=>{const r=rows.find(x=>x.k===k);return `<span class="pill ${r.z[2]}">${labelOf(k)}: ${r.val} · ${t('z.'+r.z[3])}</span>`}).join('');
+  return `<div class="zsum"><div class="zc g"><b>${zc.g}</b>${t('lgN')}</div><div class="zc w"><b>${zc.w}</b>${t('lgW')}</div><div class="zc r"><b>${zc.r}</b>${t('lgR')}</div></div>
+    <p class="znote">${t('chZoneNote')}</p><div class="cmps">${tracks}</div>
+    <div class="legend"><span><i style="background:var(--zg)"></i>${t('lgN')}</span><span><i style="background:var(--zw)"></i>${t('lgW')}</span><span><i style="background:var(--zr)"></i>${t('lgR')}</span></div>
+    <div class="chips">${chips}</div><div class="cinfo" aria-live="polite">${t('chHint')}</div>`;
+}
+function chFac(res){
+  const rows=factorList(res.s),mx=Math.max(...rows.map(r=>r.imp));
+  const col={g:'var(--low)',w:'var(--mid)',r:'var(--high)'};
+  return `<p class="sub">${t('factSub')}</p><div class="frows">${rows.map(r=>{
+    const info=t('chFacInfo',{n:r.lab,w:r.imp.toFixed(1),v:r.val});
+    return `<div class="fr ctr" tabindex="0" role="button" data-info="${esc(info)}" aria-label="${esc(info)}"><div class="t"><span class="nm">${r.lab}</span><span class="vl"><b>${r.val}</b> ${r.z?`<em class="pill ${r.z[2]}">${t('z.'+r.z[3])}</em>`:''}</span></div>
+      <div class="wb"><div class="tr"><i data-w="${(r.imp/mx*100).toFixed(0)}" style="width:0;background:${r.z?col[r.z[2]]:'var(--accent)'}"></i></div><small>${r.imp.toFixed(1)}%</small></div></div>`;
+  }).join('')}</div><div class="cinfo" aria-live="polite">${t('chHint')}</div>`;
+}
+function chartWire(el,res){
+  const dw=el.querySelector('.donutw');
+  if(dw){
+    const cv=el.querySelector('.dcv'),cn=el.querySelector('.dcn');
+    const set=(c,hover)=>{
+      dw.classList.toggle('hov',!!hover);
+      el.querySelectorAll('[data-c]').forEach(x=>x.classList.toggle('on',!!hover&&x.dataset.c===c));
+      cv.textContent=pc1(res.p[c]);cv.style.color=LV[c].c;cn.textContent=lvName(c);
+    };
+    el.querySelectorAll('[data-c]').forEach(x=>{
+      ['mouseenter','focus','click'].forEach(ev=>x.addEventListener(ev,()=>set(x.dataset.c,true)));
+    });
+    dw.addEventListener('mouseleave',()=>set(res.level,false));
+    el.querySelectorAll('[data-c]').forEach(x=>x.addEventListener('blur',()=>set(res.level,false)));
+    set(res.level,false);
+  }
+  const info=el.querySelector('.cinfo');
+  if(info)el.querySelectorAll('[data-info]').forEach(x=>{
+    const show=()=>{el.querySelectorAll('[data-info].on').forEach(y=>y.classList.remove('on'));x.classList.add('on');info.textContent=x.dataset.info};
+    ['mouseenter','focus','click'].forEach(ev=>x.addEventListener(ev,show));
+  });
+}
+function mountChart(el,res,key){
+  const tab=cst[key],body={prob:chProb,ind:chInd,fac:chFac}[tab](res);
+  el.innerHTML=`<div class="chart-hd"><p class="sub">${t('chSub')} ${t('chDate',{d:fmtDate(res.ts)})}</p>
+    <div class="seg" role="group" aria-label="${t('chH')}">${CTABS.map(([k,l])=>`<button type="button" data-ct="${k}" aria-pressed="${k===tab}">${t(l)}</button>`).join('')}</div></div><div class="cbody">${body}</div>`;
+  el.querySelectorAll('[data-ct]').forEach(b=>b.addEventListener('click',()=>{cst[key]=b.dataset.ct;mountChart(el,res,key);const nb=el.querySelector(`[data-ct="${cst[key]}"]`);if(nb)nb.focus({preventScroll:true})}));
+  chartWire(el,res);animate(el);
+}
+let chartRes=null;
+function openChart(res){chartRes=res;mountChart($('chartBody'),res,'modal');modalOpen('chartModal')}
+
+let cSrc=0;
+function chartSources(){
+  const a=[];
+  if(lastAny&&!(hist[0]&&sameVals(hist[0],lastAny)))a.push({label:t('cSrcNow')+' — '+lvName(lastAny.level),res:lastAny});
+  hist.forEach(e=>a.push({label:fmtDate(e.ts)+' — '+lvName(e.level),res:e}));
+  return a;
+}
+function renderChartPane(){
+  const el=$('cBody'),src=chartSources();
+  if(!src.length){
+    el.innerHTML=`<div class="panel empty"><svg viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="8" width="44" height="48" rx="10" fill="var(--accent-soft)"/><path d="M20 44V32M30 44V22M40 44V28"/></svg><h3>${t('chNone')}</h3><button type="button" class="btn primary" data-ca="start">${t('chStart')}</button></div>`;
+    return;
+  }
+  if(cSrc>=src.length)cSrc=0;
+  el.innerHTML=`<div class="panel"><div class="chart-top"><h2 class="h3 lg">${t('chH')}</h2>${src.length>1?`<label class="csel">${t('chPick')} <select id="cSel">${src.map((x,i)=>`<option value="${i}"${i===cSrc?' selected':''}>${x.label}</option>`).join('')}</select></label>`:''}</div><div id="cMount"></div></div>`;
+  mountChart($('cMount'),src[cSrc].res,'pane');
+  const sel=$('cSel');if(sel)sel.addEventListener('change',()=>{cSrc=+sel.value;mountChart($('cMount'),chartSources()[cSrc].res,'pane')});
+}
+$('cBody').addEventListener('click',e=>{if(e.target.closest('[data-ca="start"]'))dTab('assess',true)});
+
+/* ---------- result card shared by the wizard and history ---------- */
+function resultCard(res){
+  const {s,p,level}=res,tips=advice(s),rows=factorList(s),flagged=rows.filter(r=>r.z&&r.z[2]!=='g').map(r=>r.lab);
+  const names={Low:'Low · '+t('lvl.Low'),Moderate:'Medium · '+t('lvl.Moderate'),High:'High · '+t('lvl.High')};
+  return `<div class="risk" data-level="${level}"><div class="rt"><div class="k">${t('riskK')}</div><div class="big">${LV[level].name}</div><div class="mn">${t('mn.'+level)} · ${Math.round(p[level]*100)}%</div><p class="sum">${t('sum.'+level)}</p></div>${ring(p,level)}</div>
+  <div class="panel mt16"><p class="h3">${t('expH')}</p><p class="expl">${t('expBase',{l:t('lvl.'+level),p:Math.round(p[level]*100)})} ${flagged.length?t('expFlag',{list:flagged.join(', ')}):t('expNone')}</p>
+    <p class="h3">${t('probH')}</p><p class="sub">${t('probSub')}</p>
+    <div class="bars">${['Low','Moderate','High'].map(c=>`<div class="bar"><div class="t"><span>${names[c]}</span><b>${(p[c]*100).toFixed(1)}%</b></div><div class="track"><div class="fill" data-w="${(p[c]*100).toFixed(1)}" style="width:0;background:${LV[c].c}"></div></div></div>`).join('')}</div></div>
+  <div class="panel mt16"><p class="h3">${t('tipsH')}</p><ul class="tips" style="margin-top:12px">${tips.map(x=>`<li><i class="${x.cls}"></i><span><b>${t('h.'+x.h)}.</b> ${tipTxt(x)}</span></li>`).join('')}</ul></div>`;
+}
+/* open the full existing results page for a set of values (does not create a new history entry) */
+let supAuto=false;
+function openFull(res,h,w){
+  Object.assign(state,res.s);bhv=h||DEF_H;bwv=w||DEF_W;build();
+  go('#calc');
+  if(M){supAuto=true;try{compute()}finally{supAuto=false}}
+}
+
+/* ---------- Smart Assessment wizard ---------- */
+const WS=[['Gender','Age','BMI'],['Systolic_BP','Glucose','Cholesterol'],['Smoking','Exercise_Days_Per_Week','Sleep_Hours','Family_History']];
+const WSEC=['secBasic','secClin','secLife'];
+const WSL=['wS1','wS2','wS3','wS4'];
+const ws={...defaults};
+let wStep=0,wView='form',wlast=null,wh=DEF_H,ww=DEF_W,wPrev=0,wMsgKey='',lastAny=null;
+const wHelp=new Set();
+function wField(k){
+  const hint=t(k in F?'F.'+k+'.hint':k+'.hint'),hintH=hint?`<span class="hint">${hint}</span>`:'',open=wHelp.has(k);
+  const hb=lab=>`<button type="button" class="help" aria-expanded="${open}" aria-controls="wh-${k}" aria-label="${t('helpAria',{l:lab})}" data-whelp="${k}">?</button>`;
+  if(SEG.includes(k)){
+    const lab=t(k+'.label');
+    return `<div class="field"><div class="row"><div class="lw"><span class="lab">${lab}</span>${hintH}${hb(lab)}</div><div class="seg" id="wseg-${k}" role="group" aria-label="${lab}"><button type="button" data-v="0" aria-pressed="${ws[k]===0}">${t(k+'.o0')}</button><button type="button" data-v="1" aria-pressed="${ws[k]===1}">${t(k+'.o1')}</button></div></div><div class="helpbox" id="wh-${k}" ${open?'':'hidden'}>${t(k+'.help')}</div></div>`;
+  }
+  const f=F[k],lab=t('F.'+k+'.label');
+  return `<div class="field"><div class="row"><div class="lw"><label for="wn-${k}">${lab}</label>${hintH}${hb(lab)}</div><div class="num"><input id="wn-${k}" type="number" inputmode="decimal" min="${f.min}" max="${f.max}" step="${f.step}" value="${fmt(k,ws[k])}"><span class="u">${unit(k)}</span></div></div>
+    <div class="warn" id="ww-${k}" role="alert"></div>
+    <div class="helpbox" id="wh-${k}" ${open?'':'hidden'}>${t('F.'+k+'.help')}</div>
+    ${k==='BMI'?`<div class="bmicalc"><span class="t">${t('bmiCalcT')}</span><div class="in"><label>${t('hLab')}<input id="wbh" type="number" inputmode="decimal" min="100" max="230" value="${wh}"></label><label>${t('wLab')}<input id="wbw" type="number" inputmode="decimal" min="30" max="250" value="${ww}"></label></div><span class="o" id="wbo"></span></div>`:''}
+    <input id="wr-${k}" type="range" min="${f.min}" max="${f.max}" step="${f.step}" value="${ws[k]}" aria-label="${lab}" style="--track:${trackCSS(k)}">
+    <div class="scale"><span>${f.min}</span><span class="mid">${f.normal?`<span class="nrm">${t('normalPre',{n:f.normal})}</span>`:''}<span id="wst-${k}">${pill(zoneOf(k,ws[k]))}</span></span><span>${f.max}</span></div></div>`;
+}
+function wSyncBO(b){
+  const o=$('wbo');if(!o)return;
+  const h=parseFloat($('wbh').value),w=parseFloat($('wbw').value);
+  if(b==null)b=(h>=100&&w>=30)?Math.round(w/((h/100)**2)*10)/10:null;
+  o.innerHTML=b!=null&&Math.abs(b-ws.BMI)<0.06?t('bmiAuto',{b:b,p:pill(zoneOf('BMI',ws.BMI))}):t('bmiManual');
+}
+function wSet(k,v,fromNum){
+  v=parseFloat(v);if(isNaN(v))return;v=Math.min(F[k].max,Math.max(F[k].min,v));
+  ws[k]=v;$('wr-'+k).value=v;if(!fromNum)$('wn-'+k).value=fmt(k,v);$('wst-'+k).innerHTML=pill(zoneOf(k,v));
+  if(k==='BMI'&&!fromNum)wSyncBO();
+}
+function wBMI(){
+  wh=$('wbh').value;ww=$('wbw').value;
+  const h=parseFloat(wh),w=parseFloat(ww);
+  if(!(h>=100&&h<=230&&w>=30&&w<=250)){$('wbo').textContent=t('bmiErr');return}
+  const b=Math.round(w/((h/100)**2)*10)/10,c=Math.min(F.BMI.max,Math.max(F.BMI.min,b));
+  ws.BMI=c;$('wn-BMI').value=fmt('BMI',c);$('wr-BMI').value=c;$('wst-BMI').innerHTML=pill(zoneOf('BMI',c));wSyncBO(b);
+}
+function wValidate(step){
+  let first=null;
+  for(const k of WS[step]){
+    if(!F[k])continue;
+    const n=$('wn-'+k),w=$('ww-'+k),v=parseFloat(n.value),bad=n.value.trim()===''||isNaN(v)||v<F[k].min||v>F[k].max;
+    if(bad){w.textContent=t('warnField',{a:F[k].min,b:F[k].max});n.setAttribute('aria-invalid','true');if(!first)first=n}else n.removeAttribute('aria-invalid');
+  }
+  if(first){first.focus();return false}
+  return true;
+}
+function wGoSync(){
+  const b=document.querySelector('#wBody [data-wa="calc"]');if(!b)return;
+  b.disabled=goState!=='ready';b.textContent=t(goState==='ready'?'go':goState==='fail'?'goFail':'goLoading');
+}
+function renderWizard(){
+  const body=$('wBody'),prog=$('wProg');
+  if(wView==='result'&&wlast){
+    prog.innerHTML='';
+    body.innerHTML=`<div class="wres"><h2 class="h3 lg" style="margin-bottom:12px">${t('resH')}</h2>${resultCard(wlast)}
+      <div class="panel mt16"><div class="acts"><button type="button" class="btn primary" data-wa="chart">${t('btnChart')}</button><button type="button" class="btn" data-wa="full">${t('btnFull')}</button><button type="button" class="btn" data-wa="save">${t('btnSave')}</button><button type="button" class="btn" data-wa="edit">${t('wEditAns')}</button><button type="button" class="btn" data-wa="new">${t('wNew')}</button><div class="msg" id="wMsg" role="status">${wMsgKey?t(wMsgKey):''}</div></div></div>
+      <p class="note mt16">${t('note')}</p></div>`;
+    animate(body);return;
+  }
+  const last=wStep===3,pv=(wStep+1)*25;
+  prog.innerHTML=`<div class="prog"><div class="psteps">${WSL.map((l,i)=>`<button type="button" class="ps${i<wStep?' done':''}${i===wStep?' cur':''}" data-wa="goto" data-n="${i}" ${i>wStep?'disabled':''} ${i===wStep?'aria-current="step"':''}><i aria-hidden="true">${i<wStep?'✓':i+1}</i><span>${t(l)}</span></button>`).join('')}</div>
+    <div class="pbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pv}" aria-label="${t('wStep',{n:wStep+1,m:4})}"><i style="width:${wPrev}%" data-w="${pv}"></i></div>
+    <p class="pl">${t('wStep',{n:wStep+1,m:4})} · ${t(WSL[wStep])}</p></div>`;
+  wPrev=pv;
+  let inner;
+  if(!last){
+    inner=`<p class="sec">${t(WSEC[wStep])}</p>${WS[wStep].map(wField).join('')}`;
+  }else{
+    inner=`<h2 class="h3 lg">${t('wRevH')}</h2><p class="rgp">${t('wRevP')}</p>`+WS.map((g,gi)=>`<div class="rg"><div class="rgh"><p class="sec">${t(WSEC[gi])}</p><button type="button" class="btn sm" data-wa="goto" data-n="${gi}">${t('wEdit')}</button></div>${g.map(k=>`<div class="rr"><span>${labelOf(k)}</span><b>${valueOf(k,ws)} ${F[k]&&F[k].zones?pill(zoneOf(k,ws[k])):''}</b></div>`).join('')}</div>`).join('');
+  }
+  body.innerHTML=`<div class="panel">${inner}<div class="wnav">${wStep>0?`<button type="button" class="btn" data-wa="back">${t('wBack')}</button>`:'<span></span>'}${last?`<button type="button" class="btn primary" data-wa="calc"></button>`:`<button type="button" class="btn primary" data-wa="next">${t('wNext')}</button>`}</div></div><p class="note mt16">${t('wKeep')}</p>`;
+  if(wStep===0)wSyncBO();
+  wGoSync();animate(prog);
+}
+function wGo(n){wStep=n;wView='form';renderWizard();const e=$('pane-assess');if(e.getBoundingClientRect().top<0)e.scrollIntoView({behavior:'smooth',block:'start'})}
+function wCompute(){
+  if(goState!=='ready'||!M)return;
+  const s={...ws},p=predict(s),level=Object.keys(p).reduce((a,b)=>p[a]>=p[b]?a:b);
+  wlast={s,p,level,tips:advice(s),ts:new Date().toISOString()};lastAny=wlast;
+  wMsgKey=consent?(histAdd(wlast)==='dup'?'saveDup':'autoSaved'):'saveOff';
+  wView='result';renderWizard();
+  const e=$('pane-assess');if(e.getBoundingClientRect().top<0)e.scrollIntoView({behavior:'smooth',block:'start'});
+}
+const wb=$('wBody');
+wb.addEventListener('input',e=>{
+  const id=e.target.id||'';
+  if(id==='wbh'||id==='wbw'){wBMI();return}
+  const m=id.match(/^w([nr])-(.+)$/);if(!m)return;
+  const k=m[2];$('ww-'+k).textContent='';$('wn-'+k).removeAttribute('aria-invalid');wSet(k,e.target.value,m[1]==='n');
+});
+wb.addEventListener('focusout',e=>{
+  const m=(e.target.id||'').match(/^wn-(.+)$/);if(!m)return;
+  const k=m[1],n=e.target,v=parseFloat(n.value),bad=n.value.trim()===''||isNaN(v)||v<F[k].min||v>F[k].max;
+  n.value=fmt(k,ws[k]);if(bad)$('ww-'+k).textContent=t('warnFixed',{a:F[k].min,b:F[k].max,v:fmt(k,ws[k])});
+});
+wb.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input[type=number]')){e.preventDefault();const n=wb.querySelector('[data-wa="next"]');if(n)n.click()}});
+$('wProg').addEventListener('click',e=>{const a=e.target.closest('[data-wa="goto"]');if(a&&!a.disabled)wGo(+a.dataset.n)});
+wb.addEventListener('click',async e=>{
+  const sb=e.target.closest('.seg button');
+  if(sb&&sb.parentElement.id.startsWith('wseg-')){
+    const k=sb.parentElement.id.slice(5);ws[k]=+sb.dataset.v;
+    sb.parentElement.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b===sb)));return;
+  }
+  const hb=e.target.closest('[data-whelp]');
+  if(hb){const k=hb.dataset.whelp,box=$('wh-'+k),open=hb.getAttribute('aria-expanded')==='true';hb.setAttribute('aria-expanded',String(!open));box.hidden=open;open?wHelp.delete(k):wHelp.add(k);return}
+  const a=e.target.closest('[data-wa]');if(!a)return;
+  switch(a.dataset.wa){
+    case 'next':if(wValidate(wStep))wGo(wStep+1);break;
+    case 'back':wGo(wStep-1);break;
+    case 'goto':wGo(+a.dataset.n);break;
+    case 'calc':wCompute();break;
+    case 'chart':openChart(wlast);break;
+    case 'full':openFull(wlast,wh,ww);break;
+    case 'save':{const r=await dSave(wlast);if(r){wMsgKey=r==='dup'?'saveDup':'saveOn';const m=$('wMsg');if(m)m.textContent=t(wMsgKey)}break}
+    case 'edit':wStep=3;wView='form';renderWizard();break;
+    case 'new':Object.assign(ws,defaults);wh=DEF_H;ww=DEF_W;wHelp.clear();wlast=null;wMsgKey='';wStep=0;wPrev=0;wView='form';renderWizard();break;
+  }
+});
+
+/* ---------- Assessment history ---------- */
+let hSel=[],hDet=null,hCmpOn=false,hMsgKey='';
+function hEmptyHTML(){
+  return `<div class="panel empty"><svg viewBox="0 0 64 64" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="8" width="44" height="48" rx="10" fill="var(--accent-soft)"/><circle cx="32" cy="32" r="11"/><path d="M32 26v6l4 3"/></svg><h3>${t('hH')}</h3><p>${consent?t('hEmpty'):t('hEmptyOff')}</p>${consent?'':`<button type="button" class="btn" data-ha="priv">${t('hToPriv')}</button>`}</div>`;
+}
+function hList(){
+  const head=`<div class="hhead"><div><h2 class="h3 lg">${t('hH')}</h2><p class="sub">${hist.length?t('hCount',{n:hist.length}):''}</p></div><div><button type="button" class="btn primary sm" data-ha="cmp" id="hCmpBtn" disabled>${t('hCmp')}</button></div></div><p class="hmsg" id="hMsg" role="status">${hMsgKey?t(hMsgKey):''}</p>`;
+  if(!hist.length)return head+hEmptyHTML();
+  return head+`<p class="sub" id="hPick">${t('hPick')}</p><ul class="hlist">${hist.map(e=>`<li class="hi"><label class="hck"><input type="checkbox" data-hsel="${e.id}" aria-label="${esc(t('hSelAria',{d:fmtDate(e.ts)}))}" ${hSel.includes(e.id)?'checked':''}></label>
+    <div class="hm"><span class="hd">${fmtDate(e.ts)} ${lvPill(e.level)}</span><small>Low ${pc1(e.p.Low)} · Medium ${pc1(e.p.Moderate)} · High ${pc1(e.p.High)}</small></div>
+    <div class="hb"><button type="button" class="btn sm" data-ha="view" data-id="${e.id}">${t('hView')}</button><button type="button" class="btn sm danger-o" data-ha="del" data-id="${e.id}">${t('hDel')}</button></div></li>`).join('')}</ul>`;
+}
+function hDetail(e){
+  return `<button type="button" class="back" style="background:none;border:0;font:inherit;cursor:pointer;padding:0" data-ha="back">${t('hBackList')}</button>
+    <h2 class="h3 lg" style="margin-bottom:4px">${t('hDetH')}</h2><p class="sub">${fmtDate(e.ts)}</p><div class="wres">${resultCard(e)}</div>
+    <div class="panel mt16"><div class="acts"><button type="button" class="btn primary" data-ha="chart" data-id="${e.id}">${t('btnChart')}</button><button type="button" class="btn" data-ha="full" data-id="${e.id}">${t('btnFull')}</button><button type="button" class="btn danger-o" data-ha="del" data-id="${e.id}">${t('hDel')}</button></div></div><p class="note mt16">${t('note')}</p>`;
+}
+function cmpRow(k,a,b){
+  const bin=SEG.includes(k),va=a.s[k],vb=b.s[k];
+  let cls='n',txt='',arrow='';
+  if(va===vb)txt=t('hSame');
+  else{
+    let rk=null;
+    if(k==='Smoking')rk=[va,vb];
+    else if(!bin&&F[k].zones)rk=[ZRANK[zoneOf(k,va)[2]],ZRANK[zoneOf(k,vb)[2]]];
+    let status;
+    if(rk&&rk[1]<rk[0]){cls='g';status=t('hImproved')}else if(rk&&rk[1]>rk[0]){cls='r';status=t('hWorse')}else status=t('hChanged');
+    if(bin)txt=status;
+    else{const d=vb-va;arrow=d>0?'↑':'↓';txt=`${arrow} ${d>0?'+':'−'}${F[k].step<1?Math.abs(d).toFixed(1):String(Math.abs(Math.round(d)))}`;}
+    return `<div class="pr"><span>${labelOf(k)}</span><b>${valueOf(k,a.s)}</b><b>${valueOf(k,b.s)}</b><span class="chg"><em class="pill ${cls}">${txt}</em>${bin?'':`<small>${status}</small>`}</span></div>`;
+  }
+  return `<div class="pr"><span>${labelOf(k)}</span><b>${valueOf(k,a.s)}</b><b>${valueOf(k,b.s)}</b><span class="chg"><em class="pill n">${txt}</em></span></div>`;
+}
+function hCompare(){
+  const pair=hSel.map(id=>hist.find(e=>e.id===id)).filter(Boolean).sort((x,y)=>new Date(x.ts)-new Date(y.ts));
+  if(pair.length<2){hCmpOn=false;return hList()}
+  const [a,b]=pair,pr=['Low','Moderate','High'];
+  const card=(e,lab)=>`<div class="cmpcard" data-level="${e.level}"><span class="d">${lab} · ${fmtDate(e.ts)}</span><span class="bg">${LV[e.level].name}</span><span>${t('mn.'+e.level)} · ${Math.round(e.p[e.level]*100)}%</span></div>`;
+  const probs=pr.map(c=>{
+    const d=(b.p[c]-a.p[c])*100,good=c==='Low'?d>0:d<0,cls=Math.abs(d)<0.05?'n':good?'g':'r';
+    return `<div class="pcr"><div class="t"><span>${LV[c].name} · ${t('lvl.'+c)}</span><span>${pc1(a.p[c])} → ${pc1(b.p[c])} <em class="dpp ${cls}">${d>0?'+':d<0?'−':''}${Math.abs(d).toFixed(1)} ${t('hPP')}</em></span></div>
+      <div class="pb2"><div class="track old"><div class="fill" data-w="${(a.p[c]*100).toFixed(1)}" style="width:0;background:${LV[c].c}"></div></div><div class="track"><div class="fill" data-w="${(b.p[c]*100).toFixed(1)}" style="width:0;background:${LV[c].c}"></div></div></div></div>`;
+  }).join('');
+  return `<button type="button" class="back" style="background:none;border:0;font:inherit;cursor:pointer;padding:0" data-ha="back">${t('hBackList')}</button>
+    <h2 class="h3 lg" style="margin-bottom:12px">${t('hCmpH')}</h2>
+    <div class="cmpgrid">${card(a,t('hOld'))}${card(b,t('hNew'))}</div>
+    <p class="lvsum">${a.level===b.level?t('hLvlSame',{l:lvName(a.level)}):t('hLvl',{a:lvName(a.level),b:lvName(b.level)})}</p>
+    <div class="panel mt16"><p class="h3">${t('hProbH')}</p><div class="pcmp" style="margin-top:12px">${probs}</div></div>
+    <div class="panel mt16"><p class="h3">${t('hIndH')}</p><div style="margin-top:8px"><div class="pr hd"><span>${t('hCInd')}</span><span>${t('hOld')}</span><span>${t('hNew')}</span><span class="chg">${t('hCChg')}</span></div>${KEY_ORDER.map(k=>cmpRow(k,a,b)).join('')}</div></div>
+    <p class="note mt16">${t('note')}</p>`;
+}
+function renderHist(){
+  const el=$('pane-hist');
+  const e=hDet&&hist.find(x=>x.id===hDet);
+  if(hCmpOn)el.innerHTML=hCompare();
+  else if(e)el.innerHTML=hDetail(e);
+  else{hDet=null;el.innerHTML=hList();updCmpBtn()}
+  animate(el);
+}
+function updCmpBtn(){
+  const b=$('hCmpBtn');if(!b)return;b.disabled=hSel.length!==2;
+  const p=$('hPick');if(p)p.textContent=hSel.length?t('hPicked',{n:hSel.length}):t('hPick');
+}
+$('pane-hist').addEventListener('change',e=>{
+  const id=e.target.dataset&&e.target.dataset.hsel;if(!id)return;
+  if(e.target.checked){hSel.push(id);if(hSel.length>2){const drop=hSel.shift(),o=$('pane-hist').querySelector(`[data-hsel="${drop}"]`);if(o)o.checked=false}}
+  else hSel=hSel.filter(x=>x!==id);
+  updCmpBtn();
+});
+$('pane-hist').addEventListener('click',async e=>{
+  const a=e.target.closest('[data-ha]');if(!a)return;
+  const id=a.dataset.id,en=id&&hist.find(x=>x.id===id);
+  switch(a.dataset.ha){
+    case 'view':hDet=id;renderHist();window.scrollTo({top:$('pane-hist').offsetTop-20});break;
+    case 'back':hDet=null;hCmpOn=false;renderHist();break;
+    case 'cmp':if(hSel.length===2){hCmpOn=true;renderHist()}break;
+    case 'chart':if(en)openChart(en);break;
+    case 'full':if(en)openFull(en);break;
+    case 'priv':dTab('priv',true);break;
+    case 'del':{
+      const ok=await ask({title:t('hDelQ'),body:t('hDelP'),ok:t('hDel'),cancel:t('cNo'),danger:true});
+      if(!ok)break;
+      hist=hist.filter(x=>x.id!==id);hSel=hSel.filter(x=>x!==id);saveHist();hDet=null;hMsgKey='hDeleted';cSrc=0;dashDynamic();break;
+    }
+  }
+});
+
+/* ---------- Privacy control ---------- */
+let pvMsgKey='';
+function renderPriv(){
+  $('pane-priv').innerHTML=`<div class="panel"><div class="pvrow"><div><h2 class="h3 lg">${t('pvSave')}</h2><p class="sub">${t('pvSaveP')}</p></div>
+      <button type="button" class="sw" role="switch" aria-checked="${consent}" id="pvSw" aria-label="${esc(t('pvSave'))}"><i></i><span>${consent?t('pvOn'):t('pvOff')}</span></button></div>
+      ${storageOK?'':`<div class="pvwarn">${t('pvNoStore')}</div>`}</div>
+    <div class="panel mt16"><h2 class="h3 lg">${t('pvDataH')}</h2><p class="sub">${t('pvStored',{n:hist.length})}</p>
+      <div class="acts"><button type="button" class="btn" data-pa="view">${t('pvViewHist')}</button><button type="button" class="btn danger-o" data-pa="delall" ${hist.length?'':'disabled'}>${t('pvDelAll')}</button><div class="msg" id="pvMsg" role="status">${pvMsgKey?t(pvMsgKey):''}</div></div></div>
+    <div class="panel mt16"><h2 class="h3 lg">${t('pvHowH')}</h2><ul class="pvl" style="margin-top:12px">${[1,2,3,4,5].map(i=>`<li>${t('pv'+i)}</li>`).join('')}</ul></div>`;
+}
+$('pane-priv').addEventListener('click',async e=>{
+  const sw=e.target.closest('#pvSw');
+  if(sw){
+    if(!consent){const ok=await ask({title:t('cH'),body:t('cP'),ok:t('cYes2'),cancel:t('cNo')});if(!ok)return;setConsent(true);pvMsgKey=''}
+    else{setConsent(false);pvMsgKey='pvOffNote'}
+    renderPriv();const n=$('pvSw');if(n)n.focus();return;
+  }
+  const a=e.target.closest('[data-pa]');if(!a)return;
+  if(a.dataset.pa==='view')dTab('hist',true);
+  if(a.dataset.pa==='delall'){
+    const ok=await ask({title:t('delAllQ'),body:t('delAllP'),ok:t('pvDelAll'),cancel:t('cNo'),danger:true});
+    if(!ok)return;
+    hist=[];hSel=[];hDet=null;hCmpOn=false;ds.del(HK);pvMsgKey='pvDeleted';cSrc=0;dashDynamic();
+  }
+});
+
+/* ---------- tabs ---------- */
+const DT=['assess','chart','hist','priv'];let dTabCur='assess';
+function dTab(n,focus){
+  dTabCur=n;
+  DT.forEach(x=>{const b=$('tab-'+x);b.setAttribute('aria-selected',String(x===n));b.tabIndex=x===n?0:-1;$('pane-'+x).hidden=x!==n});
+  if(n==='chart')renderChartPane();
+  if(n==='hist'){hDet=null;hCmpOn=false;renderHist()}
+  if(n==='priv')renderPriv();
+  if(focus){const b=$('tab-'+n);b.focus({preventScroll:true});const top=document.querySelector('.dtabs').getBoundingClientRect().top;if(top<0)window.scrollTo({top:window.scrollY+top-12,behavior:'smooth'})}
+}
+document.querySelector('.dtabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b)dTab(b.dataset.tab)});
+document.querySelector('.dtabs').addEventListener('keydown',e=>{
+  const i=DT.indexOf(dTabCur);let n=null;
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')n=DT[(i+1)%4];else if(e.key==='ArrowLeft'||e.key==='ArrowUp')n=DT[(i+3)%4];else if(e.key==='Home')n=DT[0];else if(e.key==='End')n=DT[3];
+  if(n){e.preventDefault();dTab(n,true)}
+});
+function dashShow(){dTab(dTabCur)}
+/* re-render panes that depend on stored data */
+function dashDynamic(){
+  if(!$('pane-hist').hidden)renderHist();
+  if(!$('pane-priv').hidden)renderPriv();
+  if(!$('pane-chart').hidden)renderChartPane();
+}
+
+/* ---------- hooks used by the existing calculator page ---------- */
+let xKey='';
+function xRender(){const m=$('xMsg');if(m)m.textContent=xKey?t(xKey):''}
+function onCalcResult(){
+  last.ts=new Date().toISOString();lastAny=last;
+  if(supAuto)xKey='';else if(consent)xKey=histAdd(last)==='dup'?'saveDup':'autoSaved';else xKey='saveOff';
+  xRender();
+}
+$('xChart').addEventListener('click',()=>{if(last)openChart(last)});
+$('xSave').addEventListener('click',async()=>{if(!last)return;const r=await dSave(last);if(r){xKey=r==='dup'?'saveDup':'saveOn';xRender()}});
+/* called from applyLang() */
+function dashLang(){
+  renderWizard();renderHist();renderPriv();renderChartPane();xRender();
+  if(!$('chartModal').hidden&&chartRes)mountChart($('chartBody'),chartRes,'modal');
+}
+
+/* ---------- wiring ---------- */
+function resetValues(){
+  Object.assign(state,defaults);bhv=DEF_H;bwv=DEF_W;
+  for(const k of Object.keys(F)){$('n-'+k).value=fmt(k,state[k]);$('r-'+k).value=state[k];stat(k);$('w-'+k).textContent='';$('n-'+k).removeAttribute('aria-invalid')}
+  SEG.forEach(syncSeg);$('bh').value=DEF_H;$('bw').value=DEF_W;syncBO();
+}
+$('form').addEventListener('submit',e=>{e.preventDefault();compute()});
+$('reset').addEventListener('click',()=>{resetValues();touch()});
+/* v2: restart the whole assessment */
+$('redo').addEventListener('click',()=>{
+  resetValues();last=null;$('out').hidden=true;$('emptyState').hidden=false;$('dlMsg').textContent='';
+  $('form').scrollIntoView({behavior:'smooth',block:'start'});
+  const f=document.querySelector('#seg-Gender button');if(f)f.focus({preventScroll:true});
+});
+$('fields').addEventListener('click',e=>{
+  const sb=e.target.closest('.seg button');
+  if(sb){const k=sb.parentElement.id.slice(4);state[k]=+sb.dataset.v;syncSeg(k);touch();return}
+  const b=e.target.closest('.help');if(!b)return;
+  const k=b.dataset.help,box=$('h-'+k),open=b.getAttribute('aria-expanded')==='true';
+  b.setAttribute('aria-expanded',String(!open));box.hidden=open;open?openHelp.delete(k):openHelp.add(k);
+});
+function route(){
+  const calc=curHash()==='#calc',dash=curHash()==='#dash';
+  $('intro').hidden=calc||dash;$('calc').hidden=!calc;$('dash').hidden=!dash;window.scrollTo(0,0);
+  if(dash)dashShow();
+}
+window.addEventListener('hashchange',route);
+
+/* theme */
+let dark=matchMedia('(prefers-color-scheme: dark)').matches;
+function applyTheme(){document.documentElement.dataset.theme=dark?'dark':'light';$('themeTxt').textContent=t(dark?'themeLight':'themeDark');$('themeBtn').setAttribute('aria-label',t(dark?'themeLight':'themeDark'))}
+$('themeBtn').addEventListener('click',()=>{dark=!dark;applyTheme()});
+
+/* ---------- v2: apply language to the whole page ---------- */
+function setGo(){const b=$('go');b.disabled=goState!=='ready';b.textContent=t(goState==='ready'?'go':goState==='fail'?'goFail':'goLoading');wGoSync()}
+function applyLang(){
+  document.documentElement.lang=lang;document.title=t('title');
+  document.querySelectorAll('[data-i18n]').forEach(e=>e.textContent=t(e.dataset.i18n));
+  document.querySelectorAll('[data-i18n-html]').forEach(e=>e.innerHTML=t(e.dataset.i18nHtml));
+  document.querySelectorAll('[data-i18n-aria]').forEach(e=>e.setAttribute('aria-label',t(e.dataset.i18nAria)));
+  document.querySelectorAll('.lang button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.lang===lang)));
+  build();setGo();applyTheme();render();$('dlMsg').textContent='';dashLang();
+}
+document.querySelector('.lang').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||b.dataset.lang===lang)return;
+  lang=b.dataset.lang;store.set('hra_lang',lang);applyLang();
+});
+
+applyLang();route();initDL();
+(window.__MODEL?Promise.resolve(window.__MODEL):fetch('model.json').then(r=>r.json())).then(j=>{
+  M={classes:j.classes,roots:Int32Array.from(j.roots),f:Int8Array.from(j.f),t:Float64Array.from(j.t),l:Int32Array.from(j.l),r:Int32Array.from(j.r),v:j.v};
+  goState='ready';setGo();
+}).catch(()=>{goState='fail';setGo()});
+</script>
+</body>
+</html>
